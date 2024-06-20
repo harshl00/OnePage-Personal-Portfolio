@@ -1,0 +1,67 @@
+Sure, here are the complete notes from the document, summarized with each point and sub-point along with one real-life example:
+
+### Universal Design
+**Explanation**: The design and composition of an environment so that it can be accessed, understood, and used to the greatest extent possible by all people.
+- **Example**: Ramps in public buildings for wheelchair access.
+
+### The 7 Principles of Universal Design
+1. **Equitable Use**
+   - **Explanation**: The design is useful and marketable to people with diverse abilities.
+   - **Example**: High contrast digital designs ensure color-blind users can see all screen content.
+
+2. **Flexibility in Use**
+   - **Explanation**: The design accommodates a wide range of individual preferences and abilities.
+   - **Example**: Closed-captioned subtitles in addition to audio for videos.
+
+3. **Simple and Intuitive Use**
+   - **Explanation**: The design is easy to understand, regardless of the user’s experience, knowledge, language skills, or current concentration level.
+   - **Example**: Streaming service websites with popular titles easily accessible and a noticeable search button.
+
+4. **Perceptible Information**
+   - **Explanation**: The design communicates necessary information effectively to the user, regardless of ambient conditions or the user’s sensory abilities.
+   - **Example**: Breaking up text into bullet points and using images to emphasize key points.
+
+5. **Tolerance for Error**
+   - **Explanation**: The design minimizes hazards and the adverse consequences of accidental or unintended actions.
+   - **Example**: Confirmation overlays for actions like adding items to a shopping cart.
+
+6. **Low Physical Effort**
+   - **Explanation**: The design can be used efficiently and comfortably and with a minimum of fatigue.
+   - **Example**: Anchoring relevant navigation at the top of a webpage to minimize scrolling.
+
+7. **Size and Space for Approach and Use**
+   - **Explanation**: Appropriate size and space is provided for approach, reach, manipulation, and use regardless of user’s body size, posture, or mobility.
+   - **Example**: Ensuring buttons are large enough to be clicked on both computer screens and mobile phones.
+
+### Inclusive Design
+**Explanation**: Create products that understand and enable people of all backgrounds and abilities.
+- **Example**: Websites with large fonts and high contrast for older users with presbyopia.
+
+### Design for Accessibility – Lens
+**Explanation**: A lens is a filter used to understand how different aspects of the design affect the needs of the users.
+
+#### Lens of Animation and Effects
+- **Explanation**: Ensure animations do not cause confusion, dizziness, or seizures.
+- **Example**: Slack allowing users to hide animated images and emojis.
+
+#### Lens of Audio and Video
+- **Explanation**: Ensure audio and video content is not disruptive and includes transcripts.
+- **Example**: Not autoplaying videos and providing transcripts/subtitles for all video content.
+
+#### Lens of Color
+- **Explanation**: Use color thoughtfully to ensure it conveys meaning and is accessible to all users, including those with color blindness.
+- **Example**: Using icons or text descriptions in addition to color to convey meaning.
+
+#### Lens of Controls
+- **Explanation**: Design interactive elements (buttons, links) that are easy to use and understand.
+- **Example**: Ensuring buttons are large enough and spaced appropriately to avoid touch errors.
+
+#### Lens of Font
+- **Explanation**: Use fonts and text styles that are easy to read and adaptable to user needs.
+- **Example**: Allowing users to customize font size and spacing for better readability.
+
+#### Lens of Images and Icons
+- **Explanation**: Ensure images and icons are accessible and convey the intended meaning.
+- **Example**: Providing descriptive alt text for images used in digital designs.
+
+These notes cover the major points and sub-points from the document with an explanation and one real-life example for each.
