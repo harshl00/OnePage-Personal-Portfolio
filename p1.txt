@@ -1,0 +1,39 @@
+Write an Arduino program to detect obstacle  
+using IR sensor and display the result on the serial monitor
+
+
+Open Tinkercad and create a new circuit.
+Drag an Arduino Uno onto the workspace.
+Drag an IR sensor onto the workspace.
+Connect the VCC of the IR sensor to the 5V of the Arduino using a jumper wire.
+Connect the GND of the IR sensor to the GND of the Arduino using a jumper wire.
+Connect the OUT pin of the IR sensor to digital pin 2 of the Arduino using a jumper wire.
+(Optional) You can add LEDs or a buzzer to visualize the detection if desired.
+
+
+
+// Define the pin for the IR sensor
+const int irSensorPin = 2;
+
+void setup() {
+  // Start the Serial communication
+  Serial.begin(9600);
+  
+  // Set the IR sensor pin as input
+  pinMode(irSensorPin, INPUT);
+}
+
+void loop() {
+  // Read the state of the IR sensor
+  int sensorValue = digitalRead(irSensorPin);
+  
+  // Check if the sensor detects an obstacle
+  if (sensorValue == LOW) { // Typically LOW means an obstacle is detected
+    Serial.println("Obstacle Detected!");
+  } else {
+    Serial.println("No Obstacle.");
+  }
+  
+  // Wait a moment before the next reading
+  delay(500);
+}
