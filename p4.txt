@@ -1,0 +1,129 @@
+Arduino Program to Implement Blinking of Odd & Even LEDs
+This program will blink odd and even LEDs alternatively. Odd LEDs will blink first, followed by even LEDs. You can set up multiple LEDs on your Arduino and assign them to odd and even pins.
+
+Components Needed:
+Arduino Uno
+6 LEDs (you can add more if needed)
+Resistors (220 ohms) for each LED
+Jumper wires
+Breadboard (optional)
+Setup:
+Odd LEDs will be connected to pins 3, 5, 7.
+Even LEDs will be connected to pins 2, 4, 6.
+Resistors (220 ohms) will be connected in series with each LED to limit the current.
+Wiring:
+Connect each LED's anode (long leg) to the respective pin on the Arduino.
+Connect each LED's cathode (short leg) to GND through a 220-ohm resistor.
+Example:
+
+LED 1 (Odd) connected to pin 3
+LED 2 (Even) connected to pin 2
+LED 3 (Odd) connected to pin 5
+LED 4 (Even) connected to pin 4
+LED 5 (Odd) connected to pin 7
+LED 6 (Even) connected to pin 6
+Code for Blinking Odd and Even LEDs:
+
+
+// Define pins for Odd and Even LEDs
+int oddLEDs[] = {3, 5, 7};  // Odd LEDs
+int evenLEDs[] = {2, 4, 6}; // Even LEDs
+int delayTime = 500;         // Delay time for blinking (milliseconds)
+
+void setup() {
+  // Set Odd LED pins as outputs
+  for (int i = 0; i < 3; i++) {
+    pinMode(oddLEDs[i], OUTPUT);
+  }
+
+  // Set Even LED pins as outputs
+  for (int i = 0; i < 3; i++) {
+    pinMode(evenLEDs[i], OUTPUT);
+  }
+}
+
+void loop() {
+  // Turn ON Odd LEDs and OFF Even LEDs
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(oddLEDs[i], HIGH);   // Turn ON Odd LEDs
+    digitalWrite(evenLEDs[i], LOW);   // Turn OFF Even LEDs
+  }
+  delay(delayTime); // Wait for delay time
+
+  // Turn ON Even LEDs and OFF Odd LEDs
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(oddLEDs[i], LOW);    // Turn OFF Odd LEDs
+    digitalWrite(evenLEDs[i], HIGH);  // Turn ON Even LEDs
+  }
+  delay(delayTime); // Wait for delay time
+}
+
+
+Arduino Program to Implement Blinking of Odd & Even LEDs
+This program will blink odd and even LEDs alternatively. Odd LEDs will blink first, followed by even LEDs. You can set up multiple LEDs on your Arduino and assign them to odd and even pins.
+
+Components Needed:
+Arduino Uno
+6 LEDs (you can add more if needed)
+Resistors (220 ohms) for each LED
+Jumper wires
+Breadboard (optional)
+Setup:
+Odd LEDs will be connected to pins 3, 5, 7.
+Even LEDs will be connected to pins 2, 4, 6.
+Resistors (220 ohms) will be connected in series with each LED to limit the current.
+Wiring:
+Connect each LED's anode (long leg) to the respective pin on the Arduino.
+Connect each LED's cathode (short leg) to GND through a 220-ohm resistor.
+Example:
+
+LED 1 (Odd) connected to pin 3
+LED 2 (Even) connected to pin 2
+LED 3 (Odd) connected to pin 5
+LED 4 (Even) connected to pin 4
+LED 5 (Odd) connected to pin 7
+LED 6 (Even) connected to pin 6
+Code for Blinking Odd and Even LEDs:
+cpp
+Copy code
+// Define pins for Odd and Even LEDs
+int oddLEDs[] = {3, 5, 7};  // Odd LEDs
+int evenLEDs[] = {2, 4, 6}; // Even LEDs
+int delayTime = 500;         // Delay time for blinking (milliseconds)
+
+void setup() {
+  // Set Odd LED pins as outputs
+  for (int i = 0; i < 3; i++) {
+    pinMode(oddLEDs[i], OUTPUT);
+  }
+
+  // Set Even LED pins as outputs
+  for (int i = 0; i < 3; i++) {
+    pinMode(evenLEDs[i], OUTPUT);
+  }
+}
+
+void loop() {
+  // Turn ON Odd LEDs and OFF Even LEDs
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(oddLEDs[i], HIGH);   // Turn ON Odd LEDs
+    digitalWrite(evenLEDs[i], LOW);   // Turn OFF Even LEDs
+  }
+  delay(delayTime); // Wait for delay time
+
+  // Turn ON Even LEDs and OFF Odd LEDs
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(oddLEDs[i], LOW);    // Turn OFF Odd LEDs
+    digitalWrite(evenLEDs[i], HIGH);  // Turn ON Even LEDs
+  }
+  delay(delayTime); // Wait for delay time
+}
+How It Works:
+Odd LEDs (connected to pins 3, 5, 7) will turn ON first while even LEDs (connected to pins 2, 4, 6) will remain OFF.
+After a delay (set by delayTime), even LEDs will turn ON while odd LEDs turn OFF.
+This process repeats continuously, creating an alternating blinking effect between odd and even LEDs.
+Steps for Running the Program:
+Set up the LEDs on your Tinkercad workspace or real Arduino based on the pin assignments provided.
+Copy and paste the code into your Arduino IDE (or Tinkercad code editor).
+Upload the code to your Arduino and start the simulation (or observe the physical blinking if using a real board).
+This basic setup can be extended by adding more LEDs, modifying the delay time, or even implementing different patterns!
