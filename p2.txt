@@ -1,0 +1,92 @@
+1. Servo Motor Control Using a Potentiometer on Tinkercad
+Setup in Tinkercad:
+Add Components:
+
+Add an Arduino Uno from the components menu.
+Add a Servo motor.
+Add a Potentiometer.
+Wiring:
+
+Servo Motor:
+
+Connect GND of the servo to GND on the Arduino.
+Connect VCC of the servo to 5V on the Arduino.
+Connect the signal pin of the servo to pin 9 on the Arduino.
+Potentiometer:
+
+Connect GND of the potentiometer to GND on the Arduino.
+Connect VCC of the potentiometer to 5V on the Arduino.
+Connect the middle pin (signal) of the potentiometer to A0 on the Arduino.'
+
+#include <Servo.h>
+
+Servo myServo;  // Create Servo object
+int potPin = A0; // Analog pin for potentiometer
+int potValue;    // Store potentiometer value
+int servoPos;    // Store servo position
+
+void setup() {
+  myServo.attach(9);  // Attach servo to pin 9
+  Serial.begin(9600); // Start serial communication
+}
+
+void loop() {
+  potValue = analogRead(potPin);                // Read potentiometer
+  servoPos = map(potValue, 0, 1023, 0, 180);    // Map pot value to servo position
+  myServo.write(servoPos);                      // Set servo position
+  
+  // Print the potentiometer and servo position values
+  Serial.print("Potentiometer: ");
+  Serial.print(potValue);
+  Serial.print(" | Servo Position: ");
+  Serial.println(servoPos);
+  
+  delay(20);  // Wait before next loop
+}
+
+
+2. Servo Motor Control Without a Potentiometer on Tinkercad
+Setup in Tinkercad:
+Add Components:
+
+Add an Arduino Uno.
+Add a Servo motor.
+Wiring:
+
+Servo Motor:
+Connect GND of the servo to GND on the Arduino.
+Connect VCC of the servo to 5V on the Arduino.
+Connect the signal pin of the servo to pin 9 on the Arduino.
+Code (Tinkercad-Compatible):
+
+
+
+#include <Servo.h>
+
+Servo myServo;  // Create Servo object
+int servoPos = 0;  // Initialize position
+
+void setup() {
+  myServo.attach(9); // Attach servo to pin 9
+  Serial.begin(9600); // Start serial communication
+}
+
+void loop() {
+  // Move servo from 0 to 180 degrees
+  for (servoPos = 0; servoPos <= 180; servoPos++) {
+    myServo.write(servoPos); // Move to the position
+    Serial.print("Servo Position: ");
+    Serial.println(servoPos);
+    delay(20); // Wait before next position
+  }
+  
+  // Move servo from 180 to 0 degrees
+  for (servoPos = 180; servoPos >= 0; servoPos--) {
+    myServo.write(servoPos); // Move to the position
+    Serial.print("Servo Position: ");
+    Serial.println(servoPos);
+    delay(20); // Wait before next position
+  }
+
+  delay(1000); // Pause before next loop
+}
