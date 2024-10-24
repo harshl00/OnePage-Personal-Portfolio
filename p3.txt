@@ -1,0 +1,151 @@
+Simulating an Interactive Traffic System with Arduino for Cars and Pedestrians Controlled by Push Buttons (on Tinkercad)
+We will create an interactive traffic light system where:
+
+Cars and pedestrians are controlled by push buttons.
+The system will have traffic lights for cars (Red, Yellow, Green).
+There will be a pedestrian crossing light (Red and Green).
+Push buttons are used to trigger pedestrian crossing, with traffic stopping for cars and allowing pedestrians to cross.
+Components Needed:
+Arduino Uno
+2 Push Buttons (one for pedestrians and one for resetting or triggering car flow)
+3 LEDs for car traffic light (Red, Yellow, Green)
+2 LEDs for pedestrian traffic light (Red, Green)
+Resistors (220 ohms) for each LED
+Jumper wires and a breadboard (optional)
+Wiring the Components:
+1. Car Traffic Lights (3 LEDs):
+Connect Green LED to pin 8.
+Connect Yellow LED to pin 9.
+Connect Red LED to pin 10.
+2. Pedestrian Traffic Lights (2 LEDs):
+Connect Red pedestrian LED to pin 11.
+Connect Green pedestrian LED to pin 12.
+3. Push Buttons:
+Pedestrian push button: Connect one side to pin 2 and the other side to GND (with a pull-up resistor).
+Car flow button: Connect one side to pin 3 and the other side to GND (with a pull-up resistor).
+Tinkercad Circuit Layout:
+Use 220Ω resistors for each LED.
+Set up the buttons with a pull-down resistor to ensure they register proper states.
+Code Explanation:
+The pedestrian button allows pedestrians to stop car traffic and cross safely.
+The car button can reset the car lights or control the flow of traffic.
+LEDs are used to indicate the traffic light status for cars and pedestrians.
+The system operates based on button presses, switching between allowing cars to move or stopping them for pedestrians.
+Code (Tinkercad-Compatible):
+
+
+
+
+// Pin assignments for LEDs
+const int carGreen = 8;
+const int carYellow = 9;
+const int carRed = 10;
+const int pedRed = 11;
+const int pedGreen = 12;
+
+// Pin assignments for buttons
+const int pedButton = 2;
+const int carButton = 3;
+
+int pedButtonState = 0;  // Variable for storing pedestrian button state
+int carButtonState = 0;  // Variable for storing car button state
+
+void setup() {
+  // Set the traffic light LEDs as outputs
+  pinMode(carGreen, OUTPUT);
+  pinMode(carYellow, OUTPUT);
+  pinMode(carRed, OUTPUT);
+  pinMode(pedRed, OUTPUT);
+  pinMode(pedGreen, OUTPUT);
+  
+  // Set buttons as inputs
+  pinMode(pedButton, INPUT_PULLUP);
+  pinMode(carButton, INPUT_PULLUP);
+  
+  // Initially, cars can move (green for cars, red for pedestrians)
+  digitalWrite(carGreen, HIGH);
+  digitalWrite(carYellow, LOW);
+  digitalWrite(carRed, LOW);
+  digitalWrite(pedRed, HIGH);
+  digitalWrite(pedGreen, LOW);
+  
+  // Start serial communication for debugging
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Read button states
+  pedButtonState = digitalRead(pedButton);
+  carButtonState = digitalRead(carButton);
+  
+  // If pedestrian button is pressed
+  if (pedButtonState == LOW) {
+    // Stop cars and allow pedestrians to cross
+    Serial.println("Pedestrian button pressed. Stopping cars...");
+    stopCarsForPedestrians();
+  }
+  
+  // If car button is pressed (optional: can use to reset or control car flow)
+  if (carButtonState == LOW) {
+    Serial.println("Car button pressed. Resetting traffic lights...");
+    allowCarsToMove();
+  }
+}
+
+void stopCarsForPedestrians() {
+  // Turn car red light on, stop cars
+  digitalWrite(carGreen, LOW);
+  digitalWrite(carYellow, LOW);
+  digitalWrite(carRed, HIGH);
+  
+  // Turn pedestrian green light on, allow pedestrians to cross
+  digitalWrite(pedRed, LOW);
+  digitalWrite(pedGreen, HIGH);
+  
+  delay(5000);  // Keep pedestrian light green for 5 seconds
+  
+  // Flash yellow light for cars (warning)
+  digitalWrite(carRed, LOW);
+  digitalWrite(carYellow, HIGH);
+  delay(2000);
+  
+  // After crossing, reset the lights
+  allowCarsToMove();
+}
+
+void allowCarsToMove() {
+  // Turn on car green light, let cars move
+  digitalWrite(carGreen, HIGH);
+  digitalWrite(carYellow, LOW);
+  digitalWrite(carRed, LOW);
+  
+  // Turn pedestrian red light on, stop pedestrians
+  digitalWrite(pedRed, HIGH);
+  digitalWrite(pedGreen, LOW);
+}
+
+
+How the System Works:
+Initial state:
+
+Cars are allowed to move (Green LED ON for cars, Red LED ON for pedestrians).
+Pedestrians must wait (Green pedestrian light OFF).
+When pedestrian button is pressed:
+
+Cars are stopped (Red LED ON for cars), and pedestrians can cross (Green LED ON for pedestrians).
+The system holds this state for 5 seconds, allowing pedestrians to safely cross.
+Afterward, the car yellow light flashes as a warning, and then the car lights reset to allow cars to move again.
+When car button is pressed (optional):
+
+This button can be used to reset the system or manually allow cars to move.
+Steps for Running the Simulation in Tinkercad:
+Create the circuit: Add the Arduino, LEDs, resistors, and push buttons in your Tinkercad workspace. Wire them as described.
+
+Copy the code: Paste the provided code into the code editor in Tinkercad.
+
+Start the simulation: Click "Start Simulation" in Tinkercad.
+
+Initially, cars will be allowed to move.
+Press the pedestrian button (pin 2) to stop car traffic and allow pedestrians to cross.
+Press the car button (pin 3) to reset the system manually if needed.
+Monitor: You can also view status messages in the Serial Monitor in Tink
