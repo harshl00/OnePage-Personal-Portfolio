@@ -1,0 +1,80 @@
+Motion Detection Using PIR Sensor with Arduino
+This project interfaces a PIR (Passive Infrared) sensor with an Arduino Uno to detect motion and display the result on the serial monitor.
+
+Components Needed:
+Arduino Uno
+PIR Sensor
+Jumper Wires
+Breadboard (optional)
+PIR Sensor Pinout:
+VCC: Connects to 5V of Arduino.
+GND: Connects to Ground (GND).
+OUT: Connects to a digital pin on the Arduino (we'll use pin 2).
+Circuit Setup:
+Connect the VCC pin of the PIR sensor to the 5V pin on the Arduino.
+Connect the GND pin of the PIR sensor to the GND on the Arduino.
+Connect the OUT pin of the PIR sensor to pin 2 on the Arduino.
+Wiring:
+PIR VCC → Arduino 5V
+PIR GND → Arduino GND
+PIR OUT → Arduino Pin 2
+
+// Define the PIR sensor output pin
+const int pirSensorPin = 2;  // PIR sensor output connected to pin 2
+int pirState = LOW;          // Variable to store PIR sensor state
+
+void setup() {
+  // Start the serial communication at 9600 baud rate
+  Serial.begin(9600);
+
+  // Set the PIR sensor pin as an input
+  pinMode(pirSensorPin, INPUT);
+}
+
+void loop() {
+  // Read the value from the PIR sensor
+  int sensorValue = digitalRead(pirSensorPin);
+  
+  // Check if motion is detected
+  if (sensorValue == HIGH) {
+    // Motion detected
+    if (pirState == LOW) {
+      // Print motion detected message
+      Serial.println("Motion Detected!");
+      pirState = HIGH;
+    }
+  } else {
+    // No motion detected
+    if (pirState == HIGH) {
+      // Print no motion detected message
+      Serial.println("No Motion.");
+      pirState = LOW;
+    }
+  }
+  
+  // Short delay to prevent spamming the serial monitor
+  delay(500);
+}
+
+
+How the Code Works:
+PIR Sensor Pin Setup: The PIR sensor is connected to pin 2 and is continuously monitored.
+Reading the Sensor: The program uses digitalRead() to check the OUT pin of the PIR sensor. When motion is detected, the sensor sends a HIGH signal.
+Serial Output:
+If motion is detected, the message "Motion Detected!" is printed to the serial monitor.
+If no motion is detected, "No Motion." is displayed.
+How to Test:
+Connect the circuit as per the wiring diagram.
+Upload the code to your Arduino.
+Open the Serial Monitor in the Arduino IDE.
+Wave your hand or move in front of the PIR sensor.
+The Serial Monitor will display "Motion Detected!" whenever motion is detected.
+It will display "No Motion." when no motion is detected after the sensor resets.
+How the PIR Sensor Works:
+The PIR sensor detects changes in infrared radiation (heat). When a person or object moves in front of the sensor, the sensor's output pin goes HIGH, indicating motion.
+The pirState variable is used to ensure that the messages are only printed when there is a change in the detection state (either from no motion to motion or from motion to no motion).
+Simulation on Tinkercad:
+Set up the circuit in Tinkercad by connecting the PIR sensor and the Arduino as described.
+Copy and paste the code into the code editor in Tinkercad.
+Start the simulation. The Serial Monitor will display "Motion Detected!" when the PIR sensor detects movement.
+Let me know if you need further assistance!
