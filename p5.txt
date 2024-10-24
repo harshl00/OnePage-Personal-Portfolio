@@ -1,0 +1,67 @@
+To control two LEDs using a push button, we will implement the following behavior:
+
+LED1 will turn ON when the button is pressed.
+LED2 will turn OFF when the button is released.
+Components Needed:
+Arduino Uno
+2 LEDs (LED1 and LED2)
+1 Push Button
+Resistors (220 ohms for each LED)
+Jumper wires
+Breadboard (optional)
+Circuit Diagram:
+LED1 connected to pin 8.
+LED2 connected to pin 9.
+Push button connected to pin 2 (with a pull-down resistor).
+Wiring the Components:
+Connect the anode (long leg) of LED1 to pin 8 through a 220-ohm resistor.
+Connect the anode (long leg) of LED2 to pin 9 through a 220-ohm resistor.
+Connect the cathode (short leg) of both LEDs to GND.
+Connect one terminal of the push button to pin 2.
+Connect the other terminal of the push button to GND with a pull-down resistor, or use INPUT_PULLUP to internally pull the input to HIGH when the button is not pressed.
+Arduino Code:
+cpp
+
+
+// Define the pin numbers for LEDs and button
+const int buttonPin = 2;  // Push button connected to pin 2
+const int led1Pin = 8;    // LED1 connected to pin 8
+const int led2Pin = 9;    // LED2 connected to pin 9
+
+void setup() {
+  // Set the LED pins as OUTPUT
+  pinMode(led1Pin, OUTPUT);
+  pinMode(led2Pin, OUTPUT);
+  
+  // Set the button pin as INPUT
+  pinMode(buttonPin, INPUT_PULLUP);  // Using internal pull-up resistor
+}
+
+void loop() {
+  // Read the state of the button
+  int buttonState = digitalRead(buttonPin);
+  
+  // Check if the button is pressed (LOW due to INPUT_PULLUP)
+  if (buttonState == LOW) {
+    // Button is pressed: turn ON LED1 and turn OFF LED2
+    digitalWrite(led1Pin, HIGH);
+    digitalWrite(led2Pin, LOW);
+  } else {
+    // Button is released: turn OFF LED1 and turn ON LED2
+    digitalWrite(led1Pin, LOW);
+    digitalWrite(led2Pin, HIGH);
+  }
+}
+
+
+How the Program Works:
+The button state is continuously checked in the loop().
+When the button is pressed (LOW because of the INPUT_PULLUP configuration), LED1 turns ON and LED2 turns OFF.
+When the button is released (HIGH), LED1 turns OFF and LED2 turns ON.
+Steps to Simulate on Tinkercad:
+Set up the circuit in Tinkercad by wiring the two LEDs, push button, and resistors as described.
+Copy and paste the code into the code editor in Tinkercad.
+Click Start Simulation.
+When you press the button, LED1 should turn ON and LED2 should turn OFF.
+When you release the button, LED1 should turn OFF and LED2 should turn ON.
+This is a simple demonstration of controlling two LEDs with a single push button, but the logic can be extended to more complex scenarios depending on your needs. Let me know if you need any further clarification!
