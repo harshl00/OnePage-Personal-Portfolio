@@ -1,0 +1,11 @@
+Sure! Here's the updated dataset with Indian names and modified details:
+
+```
+'Aarav', '2024-11-25', 275.00, 'Credit Card', 'Laptop'
+'Meera', '2024-11-26', 160.50, 'Debit Card', 'Headphones'
+'Aarav', '2024-11-27', 320.00, 'UPI', 'Tablet'
+'Kavya', '2024-11-27', 470.25, 'Credit Card', 'Smartphone'
+'Rohan', '2024-11-28', 220.00, 'Cash', 'Smartwatch'
+'Aarav', '2024-11-28', 110.00, 'Credit Card', 'Keyboard'
+'Kavya', '2024-11-28', 365.00, 'UPI', 'Monitor'
+```
