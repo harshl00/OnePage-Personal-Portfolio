@@ -270,6 +270,79 @@ void loop() {
 
 
     </pre>
+<pre>
+To interface a PIR sensor with the Arduino Uno for motion detection, follow these steps:
+
+---
+
+### **Components Needed:**
+1. Arduino Uno board
+2. PIR motion sensor (e.g., HC-SR501)
+3. Jumper wires
+4. Breadboard (optional)
+
+---
+
+### **Connections:**
+
+1. **PIR Sensor Connections:**
+   - **VCC** (PIR sensor) → **5V** on Arduino
+   - **GND** (PIR sensor) → **GND** on Arduino
+   - **OUT** (PIR sensor) → **Pin 2** on Arduino (defined in the code as `pirSensorPin`)
+
+2. **Arduino Connections:**
+   - Connect the PIR sensor's `OUT` pin to **digital pin 2** on the Arduino.
+
+---
+
+### **How It Works:**
+- When the PIR sensor detects motion, it outputs a **HIGH signal** on the `OUT` pin.
+- The Arduino reads this signal using `digitalRead(pirSensorPin)`:
+  - If motion is detected (`HIGH`), the serial monitor displays **"Motion Detected!"**.
+  - If no motion is detected (`LOW`), it displays **"No Motion"**.
+
+---
+
+### **PIR Sensor Basics:**
+- **Adjustable Settings:**
+  - **Sensitivity**: Determines the detection range (adjusted using a potentiometer on the PIR sensor).
+  - **Delay Time**: The time the `OUT` pin stays HIGH after motion is detected (also adjusted via potentiometer).
+- **Warm-Up Time**: Most PIR sensors require 20–60 seconds to stabilize after power-on.
+
+---
+
+### **Connections Table:**
+
+| PIR Sensor Pin | Arduino Pin |
+|----------------|-------------|
+| VCC            | 5V          |
+| GND            | GND         |
+| OUT            | Pin 2       |
+
+---
+
+### **Testing:**
+1. Power up the Arduino.
+2. Open the **Serial Monitor** in the Arduino IDE.
+3. Set the baud rate to **9600** (matching `Serial.begin(9600)` in the code).
+4. After the PIR sensor stabilizes:
+   - Wave your hand or create motion in front of the sensor.
+   - If motion is detected, the serial monitor will display **"Motion Detected!"**.
+   - If no motion is detected, it will display **"No Motion"**.
+
+---
+
+### **Example Serial Output:**
+```
+PIR Sensor Motion Detection Initialized...
+No Motion
+No Motion
+Motion Detected!
+No Motion
+```
+
+This setup and code will enable you to detect motion using a PIR sensor and display the results on the Arduino serial monitor.
+</pre>
 
     <h2>Screenshot:</h2>
     <img src="3.png" alt="Raspberry Pi LED Blinking">
