@@ -684,6 +684,85 @@ void loop() {
 
 
     </pre>
+<pre>
+To control a servo motor using a potentiometer with an Arduino Uno, follow these steps:
+
+---
+
+### **Components Needed:**
+1. Arduino Uno board  
+2. Servo motor  
+3. Potentiometer (10kΩ recommended)  
+4. Jumper wires  
+5. Breadboard  
+
+---
+
+### **Connections:**
+
+1. **Servo Motor:**
+   - **Signal wire (Yellow/Orange)** → Connect to **pin 9** on Arduino (as defined in the code).
+   - **Power wire (Red)** → Connect to **5V** on Arduino.
+   - **Ground wire (Brown/Black)** → Connect to **GND** on Arduino.
+
+2. **Potentiometer:**
+   - **Center pin (wiper)** → Connect to **A0** on Arduino (as defined in the code).
+   - **Left pin** → Connect to **5V** on Arduino.
+   - **Right pin** → Connect to **GND** on Arduino.
+
+---
+
+### **Connections Table:**
+
+| Component      | Arduino Pin | Description                |
+|----------------|-------------|----------------------------|
+| Servo Signal   | Pin 9       | Servo control signal       |
+| Servo Power    | 5V          | Power for servo motor      |
+| Servo Ground   | GND         | Common ground for servo    |
+| Potentiometer Wiper | A0     | Reads analog value from potentiometer |
+| Potentiometer Left Pin | 5V  | Provides power to potentiometer |
+| Potentiometer Right Pin | GND| Ground connection for potentiometer |
+
+---
+
+### **How It Works:**
+
+1. **Potentiometer Reads:**
+   - The potentiometer provides an analog value (0 to 1023) based on its rotation.
+   - This value is read using `analogRead(potPin)`.
+
+2. **Mapping Values:**
+   - The `map()` function converts the potentiometer's value (0–1023) into an angle range (0–180 degrees) for the servo motor.
+
+3. **Servo Control:**
+   - The `servo.write(angle)` command moves the servo to the corresponding angle.
+
+4. **Serial Monitor Output:**
+   - The potentiometer value and the mapped servo angle are displayed on the serial monitor for debugging and observation.
+
+---
+
+### **Testing:**
+
+1. Upload the code to the Arduino Uno.
+2. Connect all components as described.
+3. Open the **Serial Monitor** in the Arduino IDE.
+4. Rotate the potentiometer and observe:
+   - The servo motor moves to angles between 0° and 180° depending on the potentiometer's position.
+   - The potentiometer value and servo angle are displayed on the serial monitor.
+
+---
+
+### **Serial Monitor Output Example:**
+
+```
+Potentiometer Value: 512 | Servo Angle: 90
+Potentiometer Value: 1023 | Servo Angle: 180
+Potentiometer Value: 0 | Servo Angle: 0
+```
+
+This setup provides precise control of the servo motor using the potentiometer.
+</pre>
 
     <h2>Screenshot:</h2>
     <img src="5.png" alt="Raspberry Pi LED Blinking">
