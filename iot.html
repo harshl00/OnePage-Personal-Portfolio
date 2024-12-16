@@ -94,6 +94,36 @@ void loop() {
 }
 
     </pre>
+<pre>
+To connect the 4 LEDs to the Arduino Uno based on the provided code, follow these steps:
+
+Components Needed:
+Arduino Uno board
+4 LEDs
+4 current-limiting resistors (220Ω–330Ω each)
+Jumper wires
+Breadboard
+Connections:
+Connect LEDs to Arduino Pins:
+
+LED 1: Connect the positive (longer) leg to pin 2 on the Arduino via a resistor. The negative (shorter) leg should connect to the GND rail of the breadboard.
+LED 2: Connect the positive leg to pin 3 via a resistor. The negative leg should connect to GND.
+LED 3: Connect the positive leg to pin 4 via a resistor. The negative leg should connect to GND.
+LED 4: Connect the positive leg to pin 5 via a resistor. The negative leg should connect to GND.
+Common Ground:
+
+Connect the GND rail of the breadboard to the GND pin on the Arduino board.
+Diagram Description:
+Each LED has its anode (positive leg) connected to a resistor that leads to one of the digital output pins (2, 3, 4, 5).
+All cathodes (negative legs) of the LEDs are connected to the GND rail of the breadboard.
+The GND rail is connected to the Arduino GND.
+Breadboard Layout Example:
+Arduino Pin	Resistor	LED Anode	LED Cathode	GND
+Pin 2	220Ω	Longer Leg	Shorter Leg	GND
+Pin 3	220Ω	Longer Leg	Shorter Leg	GND
+Pin 4	220Ω	Longer Leg	Shorter Leg	GND
+Pin 5	220Ω	Longer Leg	Shorter Leg	GND
+</pre>
 
     <h2>Screenshot:</h2>
     <img src="1.png" alt="Raspberry Pi LED Blinking">
