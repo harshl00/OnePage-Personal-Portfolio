@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question and Code Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        h2 {
+            color: #34495e;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Question:</h2>
+    <p>1.    Interface 4 LED’s on Arduino Uno. Write the arduino sketch to scrolling of LEDs. Display the result on  the serial monitor of Arduino IDE.          </p>
+
+    <h2>Code:</h2>
+    <pre>
+const int led1 = 2;
+const int led2 = 3;
+const int led3 = 4;
+const int led4 = 5;
+
+void setup() {
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(led1, HIGH);
+  Serial.println("LED 1 ON");
+  delay(500);
+  digitalWrite(led1, LOW);
+  
+  digitalWrite(led2, HIGH);
+  Serial.println("LED 2 ON");
+  delay(500);
+  digitalWrite(led2, LOW);
+  
+  digitalWrite(led3, HIGH);
+  Serial.println("LED 3 ON");
+  delay(500);
+  digitalWrite(led3, LOW);
+  
+  digitalWrite(led4, HIGH);
+  Serial.println("LED 4 ON");
+  delay(500);
+  digitalWrite(led4, LOW);
+
+  digitalWrite(led4, HIGH);
+  Serial.println("LED 4 ON");
+  delay(500);
+  digitalWrite(led4, LOW);
+
+  digitalWrite(led3, HIGH);
+  Serial.println("LED 3 ON");
+  delay(500);
+  digitalWrite(led3, LOW);
+  
+  digitalWrite(led2, HIGH);
+  Serial.println("LED 2 ON");
+  delay(500);
+  digitalWrite(led2, LOW);
+  
+  digitalWrite(led1, HIGH);
+  Serial.println("LED 1 ON");
+  delay(500);
+  digitalWrite(led1, LOW);
+}
+
+    </pre>
+
+    <h2>Screenshot:</h2>
+    <img src="1.png" alt="Raspberry Pi LED Blinking">
+
+
+
+
+
+
+
+<h2>Question:</h2>
+    <p>2. Interface IR sensor on Arduino Uno. Write an arduino  program to detect obstacle using IR sensor and display the result on the serial monitor.       </p>
+    <h2>Code:</h2>
+    <pre>
+
+const int irSensorPin = 2;
+int irSensorState = 0;
+
+void setup() {
+  pinMode(irSensorPin, INPUT);
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+  irSensorState = digitalRead(irSensorPin);
+  
+  if (irSensorState == LOW) {
+    Serial.println("Obstacle Detected!");
+  } else {
+    Serial.println("No Obstacle");
+  }
+
+  delay(500);
+}
+
+    </pre>
+
+    <h2>Screenshot:</h2>
+    <img src="2.png" alt="Raspberry Pi LED Blinking">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2>Question:</h2>
+    <p>3. Interface PIR sensor on Arduino Uno. Write an arduino  program for motion detection using PIR sensor and display the result on the serial monitor.       </p>
+    <h2>Code:</h2>
+    <pre>
+
+const int pirSensorPin = 2; 
+int motionState = 0;
+
+void setup() {
+  pinMode(pirSensorPin, INPUT);
+  
+  Serial.begin(9600);
+  
+  Serial.println("PIR Sensor Motion Detection Initialized...");
+}
+
+void loop() {
+  motionState = digitalRead(pirSensorPin);
+
+  if (motionState == HIGH) {
+    Serial.println("Motion Detected!");
+  } else {
+    Serial.println("No Motion");
+  }
+  
+  delay(500);
+}
+
+
+    </pre>
+
+    <h2>Screenshot:</h2>
+    <img src="3.png" alt="Raspberry Pi LED Blinking">
+
+
+
+
+
+
+
+
+
+<h2>Question:</h2>
+    <p>4. Interface Push button and LEDs on Arduino Uno for simulating traffic light signals.  Write a program to perform interactive traffic system using switch.   </p>
+    <h2>Code:</h2>
+    <pre>
+
+const int pedestrianGreen = 9;
+const int pedestrianRed = 10;
+const int carGreen = 11;
+const int carYellow = 12;
+const int carRed = 13;
+
+const int button1 = 3; // Car button
+const int button2 = 2; // Pedestrian button
+
+int button1State = 0;
+int button2State = 0;
+
+bool carLightOn = true;
+bool pedestrianLightOn = false;
+
+void setup() {
+  pinMode(pedestrianGreen, OUTPUT);
+  pinMode(pedestrianRed, OUTPUT);
+  pinMode(carGreen, OUTPUT);
+  pinMode(carYellow, OUTPUT);
+  pinMode(carRed, OUTPUT);
+
+  pinMode(button1, INPUT);
+  pinMode(button2, INPUT);
+  
+  digitalWrite(carGreen, HIGH);
+  digitalWrite(carYellow, LOW);
+  digitalWrite(carRed, LOW); // Car red at start
+  digitalWrite(pedestrianGreen, LOW);
+  digitalWrite(pedestrianRed, HIGH); // Pedestrian red at start
+}
+
+void loop() {
+  button1State = digitalRead(button1);
+  button2State = digitalRead(button2);
+
+  if (button1State == HIGH && !carLightOn) {
+    digitalWrite(carRed, LOW);
+    digitalWrite(carYellow, HIGH);
+    delay(1000); // Yellow for 1 second
+    digitalWrite(carYellow, LOW);
+    digitalWrite(carGreen, HIGH);
+
+     digitalWrite(pedestrianGreen, LOW);
+    digitalWrite(pedestrianRed, HIGH);
+
+    // Mark that car light is on
+    carLightOn = true;
+    pedestrianLightOn = false; // Ensure pedestrian light is off
+  }
+
+  if (button2State == HIGH && !pedestrianLightOn) {
+    digitalWrite(carGreen, LOW);
+    digitalWrite(carYellow, HIGH);
+    delay(1000); // Yellow for 1 second
+    digitalWrite(carYellow, LOW);
+    digitalWrite(carRed, HIGH);
+
+    digitalWrite(pedestrianRed, LOW);
+    digitalWrite(pedestrianGreen, HIGH);
+
+    // Mark that pedestrian light is on
+    pedestrianLightOn = true;
+    carLightOn = false; // Ensure car light is off
+  }
+}
+
+    </pre>
+
+    <h2>Screenshot:</h2>
+    <img src="4.png" alt="Raspberry Pi LED Blinking">
+
+
+
+
+
+<h2>Question:</h2>
+    <p>6. Interface RFID reader on Arduino UNO. Write an arduino program to demonstrate Security access. Display the suitable messages on the serial monitor.    </p>
+    <h2>Code:</h2>
+    <pre>
+
+Components Required:
+Arduino UNO
+RFID Reader Module (e.g., RC522)
+RFID Cards/Tags
+Jumper wires
+Breadboard (optional)
+Steps to Set Up the System:
+Connect the hardware:
+
+Connect the SDA pin of the RC522 to Pin 10 of the Arduino.
+
+Connect the SCK pin of the RC522 to Pin 13 of the Arduino.
+Connect the MOSI pin of the RC522 to Pin 11 of the Arduino.
+
+Connect the MISO pin of the RC522 to Pin 12 of the Arduino.
+Connect the RST pin of the RC522 to Pin 9 of the Arduino.
+
+Connect the GND pin of the RC522 to GND on the Arduino.
+Connect the 3.3V pin of the RC522 to 3.3V on the Arduino.
+
+Install the MFRC522 library: Before you start writing the code, you need to install the MFRC522 library for interfacing the RC522 RFID reader with the Arduino.
+
+
+Open the Arduino IDE.
+Go to Sketch → Include Library → Manage Libraries.
+In the Library Manager, search for MFRC522 and install it.
+Write the Arduino code:
+ The code below reads the RFID tag and checks whether the UID (Unique Identifier) of the RFID matches the pre-stored one. If it matches, access is granted; otherwise, access is denied.
+
+
+#include <SPI.h>            // Include the SPI library
+#include <MFRC522.h>        // Include the MFRC522 library
+
+#define SS_PIN 10           // Pin for Slave Select (SDA)
+#define RST_PIN 9           // Pin for Reset (RST)
+
+MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create an instance of the MFRC522 class
+
+// Define the UID of the authorized RFID tag
+byte authorizedUID[] = {0xDE, 0xAD, 0xBE, 0xEF};  // Change this to your RFID tag's UID
+
+void setup() {
+  Serial.begin(9600);  // Start the Serial Monitor
+  SPI.begin();         // Start the SPI communication
+  mfrc522.PCD_Init();  // Initialize the MFRC522 RFID reader
+  
+  Serial.println("Place your RFID tag near the reader.");
+}
+
+void loop() {
+  // Check if a new RFID card is present
+  if (mfrc522.PICC_IsNewCardPresent()) {
+    // Read the UID of the RFID tag
+    if (mfrc522.PICC_ReadCardSerial()) {
+      Serial.print("UID of the tag: ");
+      
+      // Display the UID of the scanned RFID card
+      for (byte i = 0; i < mfrc522.uid.size; i++) {
+        Serial.print(mfrc522.uid.uidByte[i], HEX);
+        Serial.print(" ");
+      }
+      Serial.println();
+      
+      // Check if the UID matches the authorized one
+      if (checkUID()) {
+        Serial.println("Access Granted!");
+      } else {
+        Serial.println("Access Denied!");
+      }
+      
+      // Halt the current RFID card and prepare for the next one
+      mfrc522.PICC_HaltA();
+      mfrc522.PCD_StopCrypto1();
+    }
+  }
+}
+
+// Function to check if the scanned UID matches the authorized UID
+bool checkUID() {
+  if (mfrc522.uid.size != sizeof(authorizedUID)) {
+    return false;  // If the UID size doesn't match, it's not authorized
+  }
+  
+  for (byte i = 0; i < mfrc522.uid.size; i++) {
+    if (mfrc522.uid.uidByte[i] != authorizedUID[i]) {
+      return false;  // If any byte of the UID doesn't match, deny access
+    }
+  }
+  
+  return true;  // If the UID matches, grant access
+}
+tep 4: Upload the Code to Arduino
+Connect your Arduino UNO to the computer using a USB cable.
+Open the Arduino IDE and paste the code into the IDE.
+
+Select Arduino UNO as the board type in the Tools → Board menu.
+Select the correct COM port in Tools → Port.
+Click on the Upload button (right arrow)
+ to upload the code to the Arduino.
+Step 5: Open the Serial Monitor
+After uploading the code, open the Serial Monitor in the Arduino IDE (Tools → Serial Monitor).
+
+Set the baud rate to 9600.
+Place your RFID tag near the reader, and you should see the UID printed in the Serial Monitor. If it matches the pre-stored UID, 
+you will see "Access Granted!"; otherwise, it will say "Access Denied!".
+
+
+
+    </pre>
+
+
+
+
+
+
+
+
+
+<h2>Question:</h2>
+    <p>3. 7. Interface Servo Motor and Potentiometer on arduino Uno. Write an Arduino program to    perform the following     i) to control the servo motor with potentiometer.    </p>
+    <h2>Code:</h2>
+    <pre>
+
+#include <Servo.h>
+
+Servo servo; // Create servo object
+int potPin = A0; // Potentiometer connected to A0
+int potValue;    // Variable to store potentiometer value
+int angle;       // Variable to store servo angle
+
+void setup() {
+  servo.attach(9); // Attach servo to pin 9
+  Serial.begin(9600); // Initialize Serial Monitor
+}
+
+void loop() {
+  potValue = analogRead(potPin); // Read potentiometer value
+  angle = map(potValue, 0, 1023, 0, 180); // Map potentiometer value to servo angle
+  servo.write(angle); // Move servo to the mapped angle
+  Serial.print("Potentiometer Value: ");
+  Serial.print(potValue);
+  Serial.print(" | Servo Angle: ");
+  Serial.println(angle);
+  delay(15); // Small delay for smooth movement
+}
+
+
+
+    </pre>
+
+    <h2>Screenshot:</h2>
+    <img src="5.png" alt="Raspberry Pi LED Blinking">
+
+
+<h2>Question:</h2>
+    <p>3. 7. Interface Servo Motor and Potentiometer on arduino Uno. Write an Arduino program to    perform the following     i) to control the servo motor without potentiometer.    </p>
+    <h2>Code:</h2>
+    <pre>
+
+#include <Servo.h>
+
+Servo servo; // Create servo object
+
+void setup() {
+  servo.attach(9); // Attach servo to pin 9
+  Serial.begin(9600); // Initialize Serial Monitor
+  Serial.println("Servo Motor Rotation...");
+}
+
+void loop() {
+  for (int angle = 0; angle <= 180; angle += 1) { // Increment angle
+    servo.write(angle); // Rotate servo to the current angle
+    Serial.print("Servo Angle: ");
+    Serial.println(angle);
+    delay(15); // Wait for servo to reach position
+  }
+  for (int angle = 180; angle >= 0; angle -= 1) { // Decrement angle
+    servo.write(angle);
+    Serial.print("Servo Angle: ");
+    Serial.println(angle);
+    delay(15);
+  }
+}
+
+
+    </pre>
+
+    <h2>Screenshot:</h2>
+    <img src="6.png" alt="Raspberry Pi LED Blinking">
+
+
+
+
+
+
+
+
+  <pre>
+
+
+
+7. Interface Servo Motor and Potentiometer on arduino Uno. Write an Arduino program to    perform the following  
+i) to control the servo motor with potentiometer. 
+ii) to rotate the servo motor without potentiometer.
+
+
+8. Demonstrate remote logging in raspberry pi using SSH and XRDP. Write the necessary steps and commands.    
+Step 1: Enable SSH and XRDP on your Raspberry Pi
+Connect your Raspberry Pi to a monitor, keyboard, and mouse (if not already done).
+
+Enable SSH (Secure Shell) and XRDP (Remote Desktop) on your Raspberry Pi.
+
+
+Open a terminal on your Raspberry Pi (or use the graphical interface if you're already logged in).
+
+To enable SSH (for command-line access), run this command:
+
+bash
+Copy code
+sudo raspi-config
+This will open a menu.
+Use the arrow keys to navigate:
+
+Select Interfacing Options > SSH > Select Yes to enable SSH.
+Then select Finish and reboot your Raspberry Pi.
+To enable XRDP (for graphical access), you need to install it. 
+Run these commands:
+
+bash
+Copy code
+sudo apt update
+sudo apt install xrdp
+After installation, XRDP will automatically start, and you can use it to access your Pi’s desktop remotely.
+
+
+
+Step 2: Find Your Raspberry Pi's IP Address
+To connect to your Raspberry Pi remotely, you need to know its IP address.
+
+On your Raspberry Pi, open the terminal and run this
+command:
+bash
+Copy code
+hostname -I
+This will show the IP address of your Raspberry Pi. Write it down (e.g., 192.168.1.5).
+
+
+Step 3: Remote Access via SSH (Command-Line)
+You can access 
+your Raspberry Pi’s terminal from your computer using SSH.
+
+For Windows:
+Download an SSH client called PuTTY from here.
+Open PuTTY.
+In the Host Name field, enter the Raspberry Pi’s IP address (the one you found in Step 2).
+
+Set the Port to 22 and choose SSH as the connection type.
+Click Open.
+When prompted, enter the username (usually pi) and password (the default is raspberry unless you changed it).
+
+You should now be logged in to your Raspberry Pi’s terminal remotely.
+For macOS or Linux:
+Open a terminal on your Mac or Linux computer.
+Run the following SSH command, replacing your-pi-ip with the actual
+ IP address:
+bash
+Copy code
+ssh pi@your-pi-ip
+If prompted, type yes to accept the connection.
+Enter the password (the default is raspberry unless you changed it).
+
+You should now be logged in to your Raspberry Pi’s terminal remotely.
+
+
+Step 4: Remote Access via XRDP (Graphical Desktop)
+With XRDP, you can access the graphical desktop of your Raspberry Pi, just like you would if you were using it with a monitor.
+
+
+For Windows:
+Open Remote Desktop Connection:
+Press Windows key + R to open the Run dialog.
+Type mstsc and press Enter to open Remote Desktop Connection.
+In the Computer field, type the Raspberry Pi’s IP address 
+(the one you found earlier).
+Click Connect.
+When prompted, enter your Raspberry Pi’s username (usually pi) and password (default is raspberry).
+
+You should now see the Raspberry Pi's desktop on your Windows computer.
+For macOS:
+Download and install Microsoft Remote Desktop from the Mac App Store.
+
+Open the app and click Add PC.
+In the PC Name field, type the Raspberry Pi’s IP address.
+In the User Account section, add your Raspberry Pi’s username and password.
+
+Click Save, then double-click the saved connection to access your Raspberry Pi’s desktop.
+For Linux:
+Install Remmina (if you don’t have it installed already)
+ using this command:
+bash
+Copy code
+sudo apt install remmina
+Open Remmina from your applications menu.
+Click the + button to add a new connection.
+In the Protocol dropdown, 
+select RDP.
+In the Server field, type the Raspberry Pi’s IP address.
+Enter your username (pi) and password (raspberry).
+Click Connect, and you should be able to see 
+the Raspberry Pi’s desktop remotely.
+Step 5: Close the Remote Session
+When you're done using the remote connection, you can log out or close the session:
+For SSH, 
+simply type exit in the terminal.
+For XRDP, you can click the logout button on the Raspberry Pi’s desktop or close the Remote Desktop window.
+
+
+
+9. Interface an LED on Raspberry pi. Implement a python  program to implement blink an LED for four times with a delay of  three seconds.                              
+Your Python code for blinking an LED four times with a delay of three seconds looks almost perfect! Here's a step-by-step guide on how to **interface an LED** with the **Raspberry Pi** and run your code successfully:
+
+### **Components Needed:**
+1. **Raspberry Pi** (any model with GPIO pins, e.g., Raspberry Pi 3 or 4)
+2. **LED**
+3. **330Ω Resistor** (for current-limiting)
+4. **Jumper Wires**
+5. **Breadboard** (optional)
+
+---
+
+### **Step 1: Connect the LED to the Raspberry Pi**
+
+1. **Insert the LED on the breadboard** (optional) with the longer leg (anode) being the positive (+) side and the shorter leg (cathode) being the negative (-) side.
+   
+2. **Connect the Anode (longer leg)** of the LED to **GPIO pin 18** on the Raspberry Pi.
+
+3. **Connect the Cathode (shorter leg)** of the LED to the **ground (GND)** on the Raspberry Pi **through a 330Ω resistor**. This resistor helps protect the LED from too much current.
+
+   - Pin **18** → Anode of the LED.
+   - The Cathode of the LED → Resistor → **GND (Ground)** on the Raspberry Pi.
+
+Here’s a simple wiring diagram:
+
+- **GPIO pin 18** → **Anode (long leg) of LED**.
+- **Cathode (short leg) of LED** → **330Ω Resistor** → **GND**.
+
+---
+
+### **Step 2: Set Up the Raspberry Pi for Python GPIO**
+
+1. **Make sure you have RPi.GPIO installed** (it usually comes pre-installed with the Raspberry Pi OS). If not, you can install it using the following command in the terminal:
+   
+   ```bash
+   sudo apt-get install python3-rpi.gpio
+   ```
+
+---
+
+### **Step 3: Create the Python Program to Blink the LED**
+
+1. **Open the terminal** on your Raspberry Pi.
+   
+2. **Navigate to the directory** where you want to save your Python program (e.g., Desktop):
+   
+   ```bash
+   cd ~/Desktop
+   ```
+
+3. **Create a new Python file**:
+   
+   ```bash
+   nano blink_led.py
+   ```
+
+4. **Write the Python code** to blink the LED four times with a 3-second delay:
+
+```python
+import RPi.GPIO as GPIO  # Import the GPIO library
+import time  # Import the time library for delays
+
+# Set up GPIO mode to BCM (Broadcom pin-numbering scheme)
+GPIO.setmode(GPIO.BCM)
+
+# Set GPIO pin 18 as output (where the LED is connected)
+GPIO.setup(18, GPIO.OUT)
+
+# Blink the LED 4 times
+for _ in range(4):
+    GPIO.output(18, GPIO.HIGH)  # Turn LED on (3.3V)
+    time.sleep(3)  # Wait for 3 seconds
+    GPIO.output(18, GPIO.LOW)   # Turn LED off (0V)
+    time.sleep(3)  # Wait for 3 seconds
+
+# Clean up the GPIO pins (turn off the pin)
+GPIO.cleanup()
+```
+
+5. **Save the file** by pressing `Ctrl + X`, then `Y` to confirm, and `Enter` to save the file.
+
+---
+
+### **Step 4: Run the Python Program**
+
+1. **Run the Python program** by typing the following command in the terminal:
+
+   ```bash
+   python3 blink_led.py
+   ```
+
+2. **Observe the LED**:
+   - The LED should blink **4 times**, with each blink having a delay of **3 seconds** (on for 3 seconds, off for 3 seconds).
+
+---
+
+### **Step 5: Troubleshooting**
+
+If the LED doesn't blink, check the following:
+
+1. **Wiring**:
+   - Ensure the connections are correct (GPIO pin 18, Resistor, and Ground).
+   
+2. **GPIO Pin**:
+   - Ensure you’re using the correct GPIO pin (pin 18) and that the pin is not being used by another process.
+
+3. **GPIO Library**:
+   - Ensure you have the RPi.GPIO library installed (use `sudo apt-get install python3-rpi.gpio`).
+
+4. **Permission**:
+   - Ensure you're running the program with proper permissions.
+
+---
+
+### **Conclusion**
+
+By following these steps, you have successfully interfaced an LED with your Raspberry Pi and created a Python program that blinks the LED four times with a 3-second delay. This can be a starting point for more advanced projects, such as controlling multiple LEDs, adding sensors, or integrating with web services!
+
+10. Interface pi camera module on Raspberry pi. Implement a python program to capture images and to record video.
+
+
+
+Experiment No: 8
+Equipment Needed:
+Raspberry Pi (any model with a camera interface).
+
+Raspberry Pi Camera Module (version 1 or 2).
+VGA Cable (though typically, a monitor with HDMI would be used to connect the Pi, but this can depend on your setup).
+
+Power Cable for the Raspberry Pi.
+
+
+
+
+Step 1: Connect the Camera Module to the Raspberry Pi
+Connect the Raspberry Pi Camera Module to the camera interface (CSI port) on your Raspberry Pi.
+
+Make sure the blue ribbon on the camera is facing towards the Ethernet port (or USB ports if your Pi model does not have an Ethernet port).
+
+The ribbon cable should be inserted properly into the CSI connector, and the connector latch should be pressed back in to secure it.
+
+
+Step 2: Open the Terminal and Navigate to Desktop
+On your Raspberry Pi, open the terminal by pressing Ctrl + Alt + T.
+
+Change the directory to the Desktop: code
+cd ~/Desktop/
+
+
+
+Step 3: Enable the Camera
+Now, run the following command to open the Raspberry Pi Configuration Tool:sudo raspi-config
+In 
+the configuration menu:
+
+Navigate to Interfacing Options.
+Select Camera.
+Choose Yes to enable the camera.
+After enabling,
+the tool will prompt you to reboot your Raspberry Pi. Select Yes to reboot.
+
+
+Step 4: Install the picamera Python Library
+You’ll need the picamera library to interact with the camera in Python. To install it, run:
+
+bash
+Copy code
+
+sudo apt-get update
+sudo apt-get install python3-picamera
+This ensures that the picamera library is installed and ready for use in Python.
+
+
+
+
+
+Step 5: Write the Python Program to Capture an Image and Record Video
+Create a Python script using nano to write the program.
+
+nano cameraexample.py
+
+write the following Python code into the file:
+
+python
+Copy code
+
+
+import picamera
+import time
+
+# Initialize the camera
+camera = picamera.PICamera()
+
+# Capture an image
+camera.capture('example.jpg')
+
+# Flip the camera vertically
+camera.vflip = True
+
+# Capture another image
+camera.capture('example2.jpg')
+
+# Start recording video (5 seconds)
+camera.start_recording('examplevid.h264')
+time.sleep(5)  # Record for 5 seconds
+camera.stop_recording()  # Stop recording
+After writing the code, save and exit by pressing CTRL + X, then Y, and finally Enter.
+
+
+
+
+
+Step 6: Run the Python Script
+To run the script, simply type:
+python3 cameraexample.py
+This will:
+
+Take two photos (example.jpg and example2.jpg).
+Flip the camera vertically.
+Record a video (examplevid.h264) for 5 seconds.
+
+
+
+
+
+Step 7: View the Recorded Video
+To view the recorded video (examplevid.h264), use omxplayer (a media player built for the Raspberry Pi).
+omxplayer examplevid.h264
+This will open the video in a player, and you’ll be able to view it.
+
+
+
+11. Interface DHT22 sensor on Raspberry pi. Implement a python program to read the temperature and humidity and display the result on the terminal.      
+
+
+
+Circuit Design
+If you observe the circuit diagram, there is not a lot of stuff going on with respect to the
+connections. All you need to do is to connect the VCC and GND pins of the DHT11 Sensor to
++5V and GND of Raspberry Pi and then connect the Data OUT of the Sensor to the GPIO4 i.e.
+Physical Pin 7 of the Raspberry Pi.      
+
+First step is to download the library from GitHub. But before this, I have created a folder called
+‘library’ on the desktop of the Raspberry Pi to place the downloaded files. You don’t have to
+do that.
+Now, enter the following command to download the files related to the Adafruit_DHT library.
+
+
+
+cd library
+git clone https://github.com/adafruit/Adafruit_Python_DHT.git
+
+
+
+All the contents will be downloaded to a folder called ‘Adafruit_Python_DHT’. Open this
+directory using cd Adafruit_Python_DHT. To see the contents of this folder, use ‘ls’ command.
+In that folder, there is file called ‘setup.py’. We need to install this file using the following
+command.
+sudo python setup.py install
+
+
+Code
+As we are using the library Adafruit_DHT for this project, there is nothing much to do in the
+Python Programming part. All you need to do is to invoke the library with the Sensor and
+GPIO Pin and print the values of Temperature and Humidity.
+import sys
+import Adafruit_DHT
+import time
+49 | P a g e
+while True:
+ humidity, temperature = Adafruit_DHT.read_retry(22, 4)
+ print 'Temp: {0:0.1f} C Humidity: {1:0.1f} %'.format(temperature, humidity)
+ time.sleep(1)
+
+
+
+
+
+12. Interface Ultra Sonic HC-SR04 on raspberry pi. Implement a python program to measure the distance(in cm) from obstacle    
+
+
+Sl no. Equipment’s Needed
+1 Raspberry Pi Model 3
+2 Raspberry Pi ultrasonic sensor HC-SR04
+3 VGA cable
+4 Power Cable
+
+
+
+Step 2: Connecting the HC-SR04 to the Raspberry Pi
+Now, let’s connect the sensor to the Raspberry Pi using jumper wires:
+
+
+Connect the VCC Pin of the HC-SR04 to the 5V pin on the Raspberry Pi.
+
+
+Raspberry Pi Pin 2 (5V) → HC-SR04 VCC
+Connect the GND Pin of the HC-SR04 to the GND pin on the Raspberry Pi.
+
+
+Raspberry Pi Pin 6 (Ground) → HC-SR04 GND
+Connect the TRIG Pin of the HC-SR04 to a GPIO pin on the Raspberry Pi (for example, GPIO 4).
+
+
+Raspberry Pi Pin 7 (GPIO 4) → HC-SR04 TRIG
+Connect the ECHO Pin of the HC-SR04 to another GPIO pin (for example, GPIO 18).
+
+Raspberry Pi Pin 12 (GPIO 18) → HC-SR04 ECHO
+
+Important Note: The Echo pin on the HC-SR04 sends a 5V signal, but the Raspberry Pi GPIO pins can only handle 3.3V safely. 
+So you should use a voltage divider (with two resistors, 330Ω and 470Ω) to drop the 5V signal down to 3.3V for the Raspberry Pi.
+
+
+
+
+Step 3: Build the Voltage Divider for the Echo Pin
+To protect the Raspberry Pi from the higher voltage on the Echo pin, we use a voltage divider.
+
+
+Here’s how to wire the voltage divider:
+
+330Ω Resistor → Connect between the Echo pin (HC-SR04) 
+and GPIO 18 on the Raspberry Pi.
+470Ω Resistor → Connect between GPIO 18 and Ground.
+
+This will reduce the 5V signal to around 3.3V, which is safe for the Raspberry Pi GPIO.
+
+
+Step 4: Setting Up the Raspberry Pi
+Connect your Raspberry Pi to a monitor, keyboard, and mouse, or access it remotely using SSH.
+
+Update your Raspberry Pi to make sure you have the latest software:
+sudo apt update
+sudo apt upgrade
+sudo apt install python3-rpi.gpio
+nano distance_sensor.py
+import RPi.GPIO as GPIO  # Import the GPIO library
+import time  # Import the time library for delays
+
+# Set up GPIO mode to BCM (Broadcom pin-numbering scheme)
+GPIO.setmode(GPIO.BCM)
+
+# Define GPIO pins for Trigger and Echo
+TRIG = 4
+ECHO = 18
+
+# Set up Trigger pin as output and Echo pin as input
+GPIO.setup(TRIG, GPIO.OUT)
+GPIO.setup(ECHO, GPIO.IN)
+
+# Make sure the Trigger pin is low (inactive)
+GPIO.output(TRIG, False)
+time.sleep(2)  # Allow some time for the sensor to settle
+
+# Send a pulse from the Trigger pin
+GPIO.output(TRIG, True)
+time.sleep(0.00001)  # Send a very short pulse
+GPIO.output(TRIG, False)
+
+# Measure the time it takes for the Echo pin to go high (reflecting the signal)
+while GPIO.input(ECHO) == False:
+    start = time.time()
+
+while GPIO.input(ECHO) == True:
+    end = time.time()
+
+# Calculate the time difference between start and end
+sig_time = end - start
+
+# Calculate the distance using the speed of sound (34300 cm/s)
+# Distance = (Time * Speed of Sound) / 2 (round trip)
+distance = sig_time * 34300 / 2  # Distance in centimeters
+
+# Print the distance measured
+print("Distance: {:.2f} centimeters".format(distance))
+
+# Clean up the GPIO pins after use
+GPIO.cleanup()
+Save and close the file by pressing CTRL + X, then Y, and Enter.
+
+
+
+python3 distance_sensor.py
+Distance: 24.56 centimeters
+GPIO.cleanup()
+
+
+
+13. Implement Garage spot light using raspberry pi.       
+
+
+Sl no. Equipment’s Needed
+1 Raspberry Pi Model 3
+2 Raspberry Pi ultrasonic sensor HC-SR04
+3 VGA cable
+4 Power Cable
+5 Jumper cables- Male to Female
+6 3 different colored LEDs-RGB
+
+
+
+
+1. Wiring the HC-SR04 Ultrasonic Sensor to the Raspberry Pi
+The HC-SR04 ultrasonic sensor has 4 pins:
+
+VCC → 5V (Raspberry Pi)
+GND → Ground (Raspberry Pi)
+TRIG → GPIO 4 (Raspberry Pi)
+ECHO → GPIO 18 
+(Raspberry Pi, with voltage divider)
+
+Wiring the Ultrasonic Sensor:
+
+VCC (HC-SR04) → 5V pin on the Raspberry Pi (Pin 2).
+
+GND (HC-SR04) → Ground on the Raspberry Pi (Pin 6).
+TRIG (HC-SR04) → GPIO 4 on the Raspberry Pi (Pin 7).
+ECHO (HC-SR04) → GPIO 18 on the Raspberry Pi (Pin 12).
+
+Use a voltage divider to reduce the 5V signal from the ECHO pin to 3.3V.
+Connect a 330Ω resistor between the ECHO pin and GPIO 18.
+Connect a 470Ω resistor between GPIO 18 and Ground.
+
+
+Voltage Divider for Echo Pin:
+
+ECHO Pin → 330Ω Resistor → GPIO 18 (Raspberry Pi)
+                     |
+                 470Ω Resistor
+                     |
+                 Ground
+2. Wiring the RGB LEDs to the Raspberry Pi
+Each RGB LED has 4 pins:
+
+Red pin
+Green pin
+Blue pin (we're not using the blue pin in this case)
+Common cathode 
+(or anode, depending on the type of LED; we assume common cathode for simplicity).
+We will control the Red, Green, and Yellow LEDs using GPIO pins on the Raspberry Pi.
+
+
+Wiring the RGB LEDs:
+Green LED:
+
+Green LED pin → GPIO 17 (Pin 11).
+Connect a 220Ω resistor in series to limit the current.
+Yellow LED:
+
+Yellow LED pin → GPIO 27 (Pin 13).
+
+Connect a 220Ω resistor in series to limit the current.
+Red LED:
+
+Red LED pin → GPIO 22 (Pin 15).
+Connect a 220Ω resistor in series to limit the current.
+Common Cathode (for all LEDs):
+
+
+Connect the common cathode of the RGB LEDs to Ground (Pin 6).
+
+
+
+
+cd ~/Desktop
+nano garage_spot_light.py
+import RPi.GPIO as GPIO
+import time
+
+# Set up GPIO
+GPIO.setwarnings(False)  # Disable warnings
+GPIO.setmode(GPIO.BCM)   # Use Broadcom pin numbering
+
+# Set up pins for LEDs
+GREEN = 17
+YELLOW = 27
+RED = 22
+
+# Set up pins for ultrasonic sensor
+TRIG = 4
+ECHO = 18
+
+# Set up the pins
+GPIO.setup(TRIG, GPIO.OUT)
+GPIO.setup(ECHO, GPIO.IN)
+GPIO.setup(GREEN, GPIO.OUT)
+GPIO.setup(YELLOW, GPIO.OUT)
+GPIO.setup(RED, GPIO.OUT)
+
+# Define functions for controlling LED lights
+def green_light():
+    GPIO.output(GREEN, GPIO.HIGH)
+    GPIO.output(YELLOW, GPIO.LOW)
+    GPIO.output(RED, GPIO.LOW)
+
+def yellow_light():
+    GPIO.output(GREEN, GPIO.LOW)
+    GPIO.output(YELLOW, GPIO.HIGH)
+    GPIO.output(RED, GPIO.LOW)
+
+def red_light():
+    GPIO.output(GREEN, GPIO.LOW)
+    GPIO.output(YELLOW, GPIO.LOW)
+    GPIO.output(RED, GPIO.HIGH)
+
+# Function to calculate distance from the ultrasonic sensor
+def get_distance():
+    # Send a pulse to trigger
+    GPIO.output(TRIG, True)
+    time.sleep(0.00001)  # Short pulse
+    GPIO.output(TRIG, False)
+    
+    # Measure the time taken for the echo to return
+    while GPIO.input(ECHO) == False:
+        start = time.time()
+
+    while GPIO.input(ECHO) == True:
+        end = time.time()
+
+    # Calculate the distance in centimeters
+    sig_time = end - start
+    distance = sig_time / 0.000058  # Formula to convert time to distance in cm
+    return distance
+
+# Main loop
+try:
+    while True:
+        distance = get_distance()
+        time.sleep(0.05)  # Small delay to avoid spamming the sensor
+        
+        print(f"Distance: {distance} cm")
+        
+        # Logic to control the lights based on distance
+        if distance >= 30:
+            green_light()
+        elif 30 > distance > 10:
+            yellow_light()
+        elif distance <= 10:
+            red_light()
+
+except KeyboardInterrupt:
+    print("Program stopped")
+    GPIO.cleanup()  # Clean up GPIO settings when you stop the program
+Press Ctrl + X to exit.
+Press Y to save.
+Press Enter to confirm the file name (garage_spot_light.py).
+
+sudo apt-get install python3-rpi.gpio
+python3 garage_spot_light.py
+
+
+Step 8: Troubleshooting
+If the LEDs don’t light up:
+Check your wiring connections and ensure that the GPIO pins are correctly set up.
+Ensure the 330Ω resistors are connected correctly for each LED to limit current.
+If there’s an error:
+If the program displays any errors, 
+read the error message carefully to identify the issue.
+Common issues might be misnamed pins or incorrect library installation.
+
+
+
+
+
+
+
+14.Implement a python program to control an LED using Switch
+Your Python code for blinking an LED four times with a delay of three seconds looks almost perfect! Here's a step-by-step guide on how to **interface an LED** with the **Raspberry Pi** and run your code successfully:
+
+### **Components Needed:**
+1. **Raspberry Pi** (any model with GPIO pins, e.g., Raspberry Pi 3 or 4)
+2. **LED**
+3. **330Ω Resistor** (for current-limiting)
+4. **Jumper Wires**
+5. **Breadboard** (optional)
+
+---
+
+### **Step 1: Connect the LED to the Raspberry Pi**
+
+1. **Insert the LED on the breadboard** (optional) with the longer leg (anode) being the positive (+) side and the shorter leg (cathode) being the negative (-) side.
+   
+2. **Connect the Anode (longer leg)** of the LED to **GPIO pin 18** on the Raspberry Pi.
+
+3. **Connect the Cathode (shorter leg)** of the LED to the **ground (GND)** on the Raspberry Pi **through a 330Ω resistor**. This resistor helps protect the LED from too much current.
+
+   - Pin **18** → Anode of the LED.
+   - The Cathode of the LED → Resistor → **GND (Ground)** on the Raspberry Pi.
+
+Here’s a simple wiring diagram:
+
+- **GPIO pin 18** → **Anode (long leg) of LED**.
+- **Cathode (short leg) of LED** → **330Ω Resistor** → **GND**.
+
+---
+
+### **Step 2: Set Up the Raspberry Pi for Python GPIO**
+
+1. **Make sure you have RPi.GPIO installed** (it usually comes pre-installed with the Raspberry Pi OS). If not, you can install it using the following command in the terminal:
+   
+   ```bash
+   sudo apt-get install python3-rpi.gpio
+   ```
+
+---
+
+### **Step 3: Create the Python Program to Blink the LED**
+
+1. **Open the terminal** on your Raspberry Pi.
+   
+2. **Navigate to the directory** where you want to save your Python program (e.g., Desktop):
+   
+   ```bash
+   cd ~/Desktop
+   ```
+
+3. **Create a new Python file**:
+   
+   ```bash
+   nano blink_led.py
+   ```
+
+4. **Write the Python code** to blink the LED four times with a 3-second delay:
+
+```python
+import RPi.GPIO as GPIO  # Import the GPIO library
+import time  # Import the time library for delays
+
+# Set up GPIO mode to BCM (Broadcom pin-numbering scheme)
+GPIO.setmode(GPIO.BCM)
+
+# Set GPIO pin 18 as output (where the LED is connected)
+GPIO.setup(18, GPIO.OUT)
+
+# Blink the LED 4 times
+for _ in range(4):
+    GPIO.output(18, GPIO.HIGH)  # Turn LED on (3.3V)
+    time.sleep(3)  # Wait for 3 seconds
+    GPIO.output(18, GPIO.LOW)   # Turn LED off (0V)
+    time.sleep(3)  # Wait for 3 seconds
+
+# Clean up the GPIO pins (turn off the pin)
+GPIO.cleanup()
+```
+
+5. **Save the file** by pressing `Ctrl + X`, then `Y` to confirm, and `Enter` to save the file.
+
+---
+
+### **Step 4: Run the Python Program**
+
+1. **Run the Python program** by typing the following command in the terminal:
+
+   ```bash
+   python3 blink_led.py
+   ```
+
+2. **Observe the LED**:
+   - The LED should blink **4 times**, with each blink having a delay of **3 seconds** (on for 3 seconds, off for 3 seconds).
+
+---
+
+### **Step 5: Troubleshooting**
+
+If the LED doesn't blink, check the following:
+
+1. **Wiring**:
+   - Ensure the connections are correct (GPIO pin 18, Resistor, and Ground).
+   
+2. **GPIO Pin**:
+   - Ensure you’re using the correct GPIO pin (pin 18) and that the pin is not being used by another process.
+
+3. **GPIO Library**:
+   - Ensure you have the RPi.GPIO library installed (use `sudo apt-get install python3-rpi.gpio`).
+
+4. **Permission**:
+   - Ensure you're running the program with proper permissions.
+
+---
+
+### **Conclusion**
+
+By following these steps, you have successfully interfaced an LED with your Raspberry Pi and created a Python program that blinks the LED four times with a 3-second delay. This can be a starting point for more advanced projects, such as controlling multiple LEDs, adding sensors, or integrating with web services!
+
+
+
+
+15. Demosntrate the  use of ESP8266 for the temperature sensor in a Thingspeak cloud.
+To demonstrate the use of an **ESP8266** (a Wi-Fi module) with a **temperature sensor** and sending the data to **ThingSpeak**, you need to follow several steps. ThingSpeak is an IoT cloud platform that allows you to send, visualize, and analyze data from various sensors.
+
+Here’s the **step-by-step process**:
+
+### **Required Components:**
+
+1. **ESP8266 Wi-Fi Module (e.g., NodeMCU or Wemos D1 Mini)**
+2. **Temperature Sensor** (e.g., DHT11, DHT22, or LM35)
+3. **Jumper Wires**
+4. **Breadboard** (optional, for prototyping)
+
+---
+
+### **Step 1: Set Up ThingSpeak Account**
+
+1. Go to [ThingSpeak](https://thingspeak.com/) and sign up for an account.
+2. Once signed in, create a new **Channel**:
+   - Click on the **"Channels"** tab, then click **"New Channel"**.
+   - Give your channel a name (e.g., “Temperature Sensor”).
+   - Enable fields (e.g., “Field 1: Temperature”).
+   - Click **"Save Channel"**.
+3. **Get your Write API Key**:
+   - After creating your channel, go to the **"API Keys"** tab.
+   - Copy the **Write API Key**. You’ll need this to send data to your channel.
+
+---
+
+### **Step 2: Connect the ESP8266 to the Temperature Sensor**
+
+1. **Connect the DHT11 or DHT22 sensor** to your **ESP8266**.
+   
+   **For DHT11/DHT22** sensor (used for temperature and humidity):
+   
+   - **VCC (DHT11/DHT22)** → 3.3V on ESP8266.
+   - **GND (DHT11/DHT22)** → GND on ESP8266.
+   - **DATA (DHT11/DHT22)** → GPIO 2 (or any other available GPIO) on ESP8266.
+   
+   **For LM35** (an analog temperature sensor):
+   
+   - **VCC (LM35)** → 3.3V on ESP8266.
+   - **GND (LM35)** → GND on ESP8266.
+   - **OUT (LM35)** → A0 pin on ESP8266 (Analog pin for reading temperature).
+
+---
+
+### **Step 3: Set Up the Arduino IDE**
+
+1. **Install the ESP8266 Board in Arduino IDE**:
+   - Open the **Arduino IDE**.
+   - Go to **File → Preferences**, and in the **Additional Boards Manager URLs** field, add this URL:  
+     ```
+     http://arduino.esp8266.com/stable/package_esp8266com_index.json
+     ```
+   - Go to **Tools → Board → Boards Manager**, search for "ESP8266", and click **Install**.
+   - Select the correct **ESP8266 board** under **Tools → Board** (e.g., NodeMCU 1.0).
+
+2. **Install DHT Library** (for DHT11/DHT22):
+   - Go to **Sketch → Include Library → Manage Libraries**.
+   - Search for **DHT sensor library** by Adafruit and install it.
+
+---
+
+### **Step 4: Write the Arduino Code**
+
+1. **Example Code** for reading temperature from **DHT11/DHT22** and sending it to ThingSpeak:
+
+```cpp
+#include <ESP8266WiFi.h>
+#include <DHT.h>
+#include <ThingSpeak.h>
+
+#define DHTPIN 2 // GPIO2 for DHT22
+#define DHTTYPE DHT22 // DHT11 or DHT22
+
+DHT dht(DHTPIN, DHTTYPE);
+
+const char *ssid = "YOUR_WIFI_SSID"; // Your Wi-Fi SSID
+const char *password = "YOUR_WIFI_PASSWORD"; // Your Wi-Fi Password
+
+unsigned long myChannelNumber = YOUR_CHANNEL_NUMBER; // Channel number from ThingSpeak
+const char *myWriteAPIKey = "YOUR_WRITE_API_KEY"; // Your ThingSpeak Write API Key
+
+WiFiClient client;
+
+void setup() {
+  Serial.begin(115200);
+  delay(10);
+
+  // Connect to Wi-Fi
+  WiFi.begin(ssid, password);
+  Serial.print("Connecting to Wi-Fi");
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("Connected to Wi-Fi!");
+
+  // Initialize DHT sensor
+  dht.begin();
+
+  // Initialize ThingSpeak
+  ThingSpeak.begin(client);
+}
+
+void loop() {
+  // Read the temperature
+  float temperature = dht.readTemperature();  // Celsius
+  if (isnan(temperature)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+
+  // Print temperature to Serial Monitor
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" *C");
+
+  // Send data to ThingSpeak
+  ThingSpeak.setField(1, temperature); // Field 1 is for temperature
+  int x = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
+
+  if (x == 200) {
+    Serial.println("Data sent to ThingSpeak successfully!");
+  } else {
+    Serial.println("Failed to send data to ThingSpeak. HTTP error code: " + String(x));
+  }
+
+  // Wait before sending next reading
+  delay(15000); // Wait for 15 seconds before sending the next reading
+}
+```
+
+2. **Replace the following in the code**:
+   - **YOUR_WIFI_SSID**: Your Wi-Fi SSID (Network name).
+   - **YOUR_WIFI_PASSWORD**: Your Wi-Fi password.
+   - **YOUR_CHANNEL_NUMBER**: The Channel ID of your ThingSpeak channel (found on the ThingSpeak Channel Settings page).
+   - **YOUR_WRITE_API_KEY**: The Write API key from ThingSpeak.
+
+3. **Upload the code** to your ESP8266:
+   - Select the correct **board** and **port** in the Arduino IDE.
+   - Click **Upload**.
+
+---
+
+### **Step 5: Monitor the Data in ThingSpeak**
+
+1. After the code is uploaded, your ESP8266 will connect to Wi-Fi and start sending temperature data to ThingSpeak.
+2. Visit your ThingSpeak channel page to see the **temperature data** visualized in real-time.
+
+   - ThingSpeak will update the data every 15 seconds (based on the `delay(15000)` in the code).
+   - You can view the data in **fields** (e.g., Field 1 is for temperature).
+   - ThingSpeak provides various ways to visualize the data, such as **line charts** and **bar charts**.
+
+---
+
+### **Step 6: Troubleshooting**
+
+- **If the data is not updating**:
+  - Ensure that your ESP8266 is connected to Wi-Fi by checking the serial monitor.
+  - Make sure that the **ThingSpeak Write API Key** is correctly set in the code.
+  - Check your ThingSpeak channel to ensure it's active and receiving data.
+  
+- **If the temperature readings are incorrect**:
+  - Ensure that the sensor is connected properly.
+  - You can check the sensor readings in the **Serial Monitor** to debug.
+
+---
+
+### **Conclusion**
+
+Now, you have successfully demonstrated how to use an **ESP8266** with a **temperature sensor** and send the data to **ThingSpeak** cloud for monitoring. This project is perfect for building IoT-based applications, such as monitoring temperature remotely.
+
+Feel free to expand the project by adding more sensors or automating actions based on the temperature!
+
+    </pre>
+
+
+
+
+
+
+</body>
+</html>
