@@ -428,6 +428,100 @@ void loop() {
 }
 
     </pre>
+<pre>
+To implement an interactive traffic light system using push buttons and LEDs with the given Arduino code, follow these steps:
+
+---
+
+### **Components Needed:**
+1. Arduino Uno board  
+2. 5 LEDs:  
+   - **Red LED for pedestrians**  
+   - **Green LED for pedestrians**  
+   - **Red, Yellow, and Green LEDs for cars**  
+3. 2 push buttons  
+4. 5 current-limiting resistors (220Ω–330Ω for LEDs)  
+5. 2 pull-down resistors (10kΩ for buttons)  
+6. Jumper wires  
+7. Breadboard  
+
+---
+
+### **Connections:**
+
+1. **LEDs:**
+   - **Pedestrian LEDs:**
+     - Connect the **pedestrian green LED** to pin **9** via a 220Ω resistor, with its cathode to GND.
+     - Connect the **pedestrian red LED** to pin **10** via a 220Ω resistor, with its cathode to GND.
+   - **Car LEDs:**
+     - Connect the **car green LED** to pin **11** via a 220Ω resistor, with its cathode to GND.
+     - Connect the **car yellow LED** to pin **12** via a 220Ω resistor, with its cathode to GND.
+     - Connect the **car red LED** to pin **13** via a 220Ω resistor, with its cathode to GND.
+
+2. **Buttons:**
+   - **Car Button:**
+     - Connect one side of the **car button** to pin **3**.
+     - Connect the other side to GND.
+     - Add a **pull-down resistor (10kΩ)** between pin **3** and GND.
+   - **Pedestrian Button:**
+     - Connect one side of the **pedestrian button** to pin **2**.
+     - Connect the other side to GND.
+     - Add a **pull-down resistor (10kΩ)** between pin **2** and GND.
+
+3. **Arduino Connections:**
+   - Connect the common GND rail of the breadboard to the **GND pin** of the Arduino.
+   - Connect the **5V pin** on the Arduino to the breadboard's power rail for powering the pull-down resistors.
+
+---
+
+### **Connections Table:**
+
+| Arduino Pin   | Component                 | Description               |
+|---------------|---------------------------|---------------------------|
+| Pin 9         | Pedestrian Green LED      | Pedestrian green signal   |
+| Pin 10        | Pedestrian Red LED        | Pedestrian red signal     |
+| Pin 11        | Car Green LED             | Car green signal          |
+| Pin 12        | Car Yellow LED            | Car yellow signal         |
+| Pin 13        | Car Red LED               | Car red signal            |
+| Pin 3         | Push button 1 (Car)       | For toggling car signal   |
+| Pin 2         | Push button 2 (Pedestrian)| For toggling pedestrian signal |
+| GND           | LED cathodes and buttons  | Ground connection         |
+| 5V            | Pull-down resistors       | Pull-down circuit power   |
+
+---
+
+### **How It Works:**
+
+1. **Default State:**
+   - Car lights: **Green ON**, **Yellow OFF**, **Red OFF**
+   - Pedestrian lights: **Green OFF**, **Red ON**
+   - Buttons wait for user input.
+
+2. **When the Car Button is Pressed:**
+   - The system transitions to the **car light sequence**:
+     - **Red OFF**, **Yellow ON** (for 1 second), **Green ON**
+   - Pedestrian lights reset to **Red ON**, **Green OFF**.
+
+3. **When the Pedestrian Button is Pressed:**
+   - The system transitions to the **pedestrian light sequence**:
+     - Car lights change: **Green OFF**, **Yellow ON** (for 1 second), **Red ON**.
+     - Pedestrian lights change: **Red OFF**, **Green ON**.
+
+4. The system toggles between states when either button is pressed.
+
+---
+
+### **Testing:**
+
+1. Power up the Arduino and ensure all LEDs and buttons are connected correctly.
+2. Observe the default state: **Car green** and **Pedestrian red**.
+3. Press the car button:
+   - The car signal transitions to **green**, while the pedestrian signal transitions to **red**.
+4. Press the pedestrian button:
+   - The pedestrian signal transitions to **green**, while the car signal transitions to **red**.
+
+This setup will simulate an interactive traffic light system.
+</pre>
 
     <h2>Screenshot:</h2>
     <img src="4.png" alt="Raspberry Pi LED Blinking">
