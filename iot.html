@@ -800,6 +800,80 @@ void loop() {
 
 
     </pre>
+<pre>
+To control a servo motor without a potentiometer using an Arduino Uno, follow these steps:
+
+---
+
+### **Components Needed:**
+1. Arduino Uno board  
+2. Servo motor  
+3. Jumper wires  
+4. Breadboard (optional)
+
+---
+
+### **Connections:**
+
+1. **Servo Motor:**
+   - **Signal wire (Yellow/Orange)** → Connect to **pin 9** on Arduino (as defined in the code).
+   - **Power wire (Red)** → Connect to **5V** on Arduino.
+   - **Ground wire (Brown/Black)** → Connect to **GND** on Arduino.
+
+---
+
+### **Connections Table:**
+
+| Component      | Arduino Pin | Description                |
+|----------------|-------------|----------------------------|
+| Servo Signal   | Pin 9       | Servo control signal       |
+| Servo Power    | 5V          | Power for servo motor      |
+| Servo Ground   | GND         | Common ground for servo    |
+
+---
+
+### **How It Works:**
+
+1. **Incrementing Angle:**
+   - In the `for` loop, the servo angle is incremented from 0° to 180° in 1° steps using `servo.write(angle)`.
+   - A `delay(15)` is added to give the servo time to move to the specified angle.
+
+2. **Decrementing Angle:**
+   - In another `for` loop, the servo angle is decremented from 180° to 0° in 1° steps, moving the servo in the reverse direction.
+
+3. **Serial Monitor Output:**
+   - The current angle of the servo is printed to the serial monitor at each step for observation.
+
+---
+
+### **Testing:**
+
+1. Upload the code to the Arduino Uno.
+2. Connect the servo motor as described.
+3. Open the **Serial Monitor** in the Arduino IDE.
+4. Observe the servo motor rotating:
+   - It sweeps from 0° to 180° and back to 0° in a continuous loop.
+   - The current servo angle is displayed on the serial monitor.
+
+---
+
+### **Serial Monitor Output Example:**
+
+```
+Servo Motor Rotation...
+Servo Angle: 0
+Servo Angle: 1
+Servo Angle: 2
+...
+Servo Angle: 180
+Servo Angle: 179
+Servo Angle: 178
+...
+Servo Angle: 0
+```
+
+This setup allows you to create a continuous sweeping motion for the servo motor without using any external input like a potentiometer.
+</pre>
 
     <h2>Screenshot:</h2>
     <img src="6.png" alt="Raspberry Pi LED Blinking">
