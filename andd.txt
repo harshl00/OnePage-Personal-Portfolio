@@ -1,0 +1,1703 @@
+Question 1
+Design an app for a textile shop billing. The biller will input the customer name, mobile
+number, and total amount. Save all the details in the data base. Use auto increment feature
+to save the bill number in the DB. Help the shop keeper to fetch the following details from
+the DB.
+[A] Find all the billing details of the customers.
+[B]. Find the total amount billed by all customers.
+[C] Find the detail of a payment with the bill number.
+[D] Find the total number of customers registered with the shop.
+
+
+
+
+xml code 
+
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Registration Number Input -->
+        <EditText
+            android:id="@+id/regNoEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Registration Number"
+            android:inputType="text" />
+
+        <!-- Name Input -->
+        <EditText
+            android:id="@+id/nameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Name"
+            android:inputType="textPersonName" />
+
+        <!-- Board Input -->
+        <EditText
+            android:id="@+id/boardEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Board Name"
+            android:inputType="text" />
+
+        <!-- Physics Marks Input -->
+        <EditText
+            android:id="@+id/physicsEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Physics Marks"
+            android:inputType="number" />
+
+        <!-- Chemistry Marks Input -->
+        <EditText
+            android:id="@+id/chemistryEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Chemistry Marks"
+            android:inputType="number" />
+
+        <!-- Math Marks Input -->
+        <EditText
+            android:id="@+id/mathEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Math Marks"
+            android:inputType="number" />
+
+        <!-- Button to Check Eligibility -->
+        <Button
+            android:id="@+id/checkButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Check Eligibility" />
+
+        <!-- Result Display -->
+        <TextView
+            android:id="@+id/resultTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Result will appear here"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="#000000" />
+
+    </LinearLayout>
+</ScrollView>
+
+
+
+
+
+java code 
+
+
+package com.example.textileshop;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText customerNameEditText, mobileNumberEditText, totalAmountEditText, searchBillNumberEditText;
+    private TextView resultTextView;
+    private Button saveButton, showAllButton, totalAmountButton, searchBillButton, totalCustomersButton;
+    private SQLiteDatabase database;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Initialize UI elements
+        customerNameEditText = findViewById(R.id.customerNameEditText);
+        mobileNumberEditText = findViewById(R.id.mobileNumberEditText);
+        totalAmountEditText = findViewById(R.id.totalAmountEditText);
+        searchBillNumberEditText = findViewById(R.id.searchBillNumberEditText);
+        resultTextView = findViewById(R.id.resultTextView);
+
+        saveButton = findViewById(R.id.saveButton);
+        showAllButton = findViewById(R.id.showAllButton);
+        totalAmountButton = findViewById(R.id.totalAmountButton);
+        searchBillButton = findViewById(R.id.searchBillButton);4
+        totalCustomersButton = findViewById(R.id.totalCustomersButton);
+
+        // Initialize SQLite Database
+        database = openOrCreateDatabase("TextileShopDB", MODE_PRIVATE, null);
+        database.execSQL("CREATE TABLE IF NOT EXISTS BillingDetails (" +
+                "BillNumber INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "CustomerName TEXT, " +
+                "MobileNumber TEXT, " +
+                "TotalAmount REAL)");
+
+        // Button listeners
+        saveButton.setOnClickListener(v -> saveBillingDetails());
+        showAllButton.setOnClickListener(v -> fetchAllBillingDetails());
+        totalAmountButton.setOnClickListener(v -> fetchTotalBilledAmount());
+        searchBillButton.setOnClickListener(v -> fetchDetailsByBillNumber());
+        totalCustomersButton.setOnClickListener(v -> fetchTotalCustomers());
+    }
+
+    private void saveBillingDetails() {
+        String customerName = customerNameEditText.getText().toString();
+        String mobileNumber = mobileNumberEditText.getText().toString();
+        String totalAmount = totalAmountEditText.getText().toString();
+
+        if (customerName.isEmpty() || mobileNumber.isEmpty() || totalAmount.isEmpty()) {
+            resultTextView.setText("Please fill all fields.");
+            return;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put("CustomerName", customerName);
+        values.put("MobileNumber", mobileNumber);
+        values.put("TotalAmount", Double.parseDouble(totalAmount));
+
+        long billNumber = database.insert("BillingDetails", null, values);
+        resultTextView.setText("Saved! Bill Number: " + billNumber);
+    }
+
+    private void fetchAllBillingDetails() {
+        Cursor cursor = database.rawQuery("SELECT * FROM BillingDetails", null);
+        if (cursor.getCount() == 0) {
+            resultTextView.setText("No billing records found.");
+            return;
+        }
+
+        if (cursor.moveTofirst()) {
+            int billNumber = cursor.getInt(0);
+            String customerName = cursor.getString(1);
+            String mobileNumber = cursor.getString(2);
+            double totalAmount = cursor.getDouble(3);
+
+            resultTextView.setText("Bill No: " + billNumber +
+                    "\nName: " + customerName +
+                    "\nMobile: " + mobileNumber +
+                    "\nAmount: ₹" + totalAmount);
+
+        }
+        cursor.close();
+        
+    }
+
+    private void fetchTotalBilledAmount() {
+        Cursor cursor = database.rawQuery("SELECT SUM(TotalAmount) FROM BillingDetails", null);
+        if (cursor.moveToFirst()) {
+            double totalAmount = cursor.getDouble(0);
+            resultTextView.setText("Total Amount Billed: ₹" + totalAmount);
+        }
+        cursor.close();
+    }
+
+    private void fetchDetailsByBillNumber() {
+        String billNumber = searchBillNumberEditText.getText().toString();
+        if (billNumber.isEmpty()) {
+            resultTextView.setText("Please enter a bill number.");
+            return;
+        }
+
+        Cursor cursor = database.rawQuery("SELECT * FROM BillingDetails WHERE BillNumber = ?", new String[]{billNumber});
+        if (cursor.moveToFirst()) {
+            String customerName = cursor.getString(1);
+            String mobileNumber = cursor.getString(2);
+            double totalAmount = cursor.getDouble(3);
+
+            resultTextView.setText("Bill No: " + billNumber +
+                    "\nName: " + customerName +
+                    "\nMobile: " + mobileNumber +
+                    "\nAmount: ₹" + totalAmount);
+        } else {
+            resultTextView.setText("No details found for Bill No: " + billNumber);
+        }
+        cursor.close();
+    }
+
+    private void fetchTotalCustomers() {
+        Cursor cursor = database.rawQuery("SELECT COUNT(*) FROM BillingDetails", null);
+        if (cursor.moveToFirst()) {
+            int totalCustomers = cursor.getInt(0);
+            resultTextView.setText("Total Customers: " + totalCustomers);
+        }
+        cursor.close();
+    }
+}
+
+
+
+question 2->>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Design an app for a Bike showroom. The customer can book the bike online. Input the
+customer name , amount paid, Name of Bank [Use spinner – List 5 popular bank names],
+Transaction number. On submitting the details, store the data in DB. Help the sales person
+to fetch the following details from the DB.
+[A] Find all the details of the bike booked.
+[B]. Find the total payment made by all the customers.
+[C] Find the payment detail (customer name, amount paid) by using the transaction
+number.
+[D] Find the total number of bikes booked.
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/customerNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Customer Name" />
+
+    <EditText
+        android:id="@+id/amountPaidEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Amount Paid"
+        android:inputType="numberDecimal" />
+
+    <Spinner
+        android:id="@+id/bankSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/transactionNumberEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Transaction Number" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Booking" />
+
+    <Button
+        android:id="@+id/showAllButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show All Bookings" />
+
+    <Button
+        android:id="@+id/totalPaymentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Payment" />
+
+    <Button
+        android:id="@+id/searchByTransactionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search by Transaction" />
+
+    <Button
+        android:id="@+id/totalBikesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Bikes Booked" />
+
+    <TextView
+        android:id="@+id/resultTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Results will be displayed here"
+        android:textSize="16sp" />
+
+</LinearLayout>
+
+
+
+
+package com.example.bikeshowroom;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText customerNameEditText, amountPaidEditText, transactionNumberEditText;
+    private Spinner bankSpinner;
+    private TextView resultTextView;
+    private Button saveButton, showAllButton, totalPaymentButton, searchByTransactionButton, totalBikesButton;
+    private SQLiteDatabase database;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Initialize UI elements
+        customerNameEditText = findViewById(R.id.customerNameEditText);
+        amountPaidEditText = findViewById(R.id.amountPaidEditText);
+        transactionNumberEditText = findViewById(R.id.transactionNumberEditText);
+        resultTextView = findViewById(R.id.resultTextView);
+
+        // Bank names Spinner
+        bankSpinner = findViewById(R.id.bankSpinner);
+        ArrayAdapter<String> bankAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
+                new String[]{"Bank A", "Bank B", "Bank C", "Bank D", "Bank E"});
+        bankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        bankSpinner.setAdapter(bankAdapter);
+
+        saveButton = findViewById(R.id.saveButton);
+        showAllButton = findViewById(R.id.showAllButton);
+        totalPaymentButton = findViewById(R.id.totalPaymentButton);
+        searchByTransactionButton = findViewById(R.id.searchByTransactionButton);
+        totalBikesButton = findViewById(R.id.totalBikesButton);
+
+        // Initialize SQLite Database
+        database = openOrCreateDatabase("BikeShowroomDB", MODE_PRIVATE, null);
+        database.execSQL("CREATE TABLE IF NOT EXISTS BikeBookings (" +
+                "BookingID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "CustomerName TEXT, " +
+                "AmountPaid REAL, " +
+                "BankName TEXT, " +
+                "TransactionNumber TEXT)");
+
+        // Button listeners
+        saveButton.setOnClickListener(v -> saveBikeBooking());
+        showAllButton.setOnClickListener(v -> fetchAllBikeBookings());
+        totalPaymentButton.setOnClickListener(v -> fetchTotalPayment());
+        searchByTransactionButton.setOnClickListener(v -> fetchBookingByTransaction());
+        totalBikesButton.setOnClickListener(v -> fetchTotalBikesBooked());
+    }
+
+    private void saveBikeBooking() {
+        String customerName = customerNameEditText.getText().toString();
+        String amountPaid = amountPaidEditText.getText().toString();
+        String transactionNumber = transactionNumberEditText.getText().toString();
+        String bankName = bankSpinner.getSelectedItem().toString();
+
+        if (customerName.isEmpty() || amountPaid.isEmpty() || transactionNumber.isEmpty()) {
+            resultTextView.setText("Please fill all fields.");
+            return;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put("CustomerName", customerName);
+        values.put("AmountPaid", Double.parseDouble(amountPaid));
+        values.put("BankName", bankName);
+        values.put("TransactionNumber", transactionNumber);
+
+        long bookingID = database.insert("BikeBookings", null, values);
+        resultTextView.setText("Booking Saved! Booking ID: " + bookingID);
+    }
+
+    private void fetchAllBikeBookings() {
+        Cursor cursor = database.rawQuery("SELECT * FROM BikeBookings", null);
+        if (cursor.getCount() == 0) {
+            resultTextView.setText("No bookings found.");
+            return;
+        }
+
+        StringBuilder result = new StringBuilder();
+        if (cursor.moveToFirst()) {
+            do {
+                int bookingID = cursor.getInt(0);
+                String customerName = cursor.getString(1);
+                double amountPaid = cursor.getDouble(2);
+                String bankName = cursor.getString(3);
+                String transactionNumber = cursor.getString(4);
+
+                result.append("Booking ID: ").append(bookingID)
+                        .append("\nCustomer Name: ").append(customerName)
+                        .append("\nAmount Paid: ₹").append(amountPaid)
+                        .append("\nBank: ").append(bankName)
+                        .append("\nTransaction No: ").append(transactionNumber)
+                        .append("\n\n");
+            } while (cursor.moveToNext());
+        }
+
+        resultTextView.setText(result.toString());
+        cursor.close();
+    }
+
+    private void fetchTotalPayment() {
+        Cursor cursor = database.rawQuery("SELECT SUM(AmountPaid) FROM BikeBookings", null);
+        if (cursor.moveToFirst()) {
+            double totalPayment = cursor.getDouble(0);
+            resultTextView.setText("Total Payment Made: ₹" + totalPayment);
+        }
+        cursor.close();
+    }
+
+    private void fetchBookingByTransaction() {
+        String transactionNumber = transactionNumberEditText.getText().toString();
+        if (transactionNumber.isEmpty()) {
+            resultTextView.setText("Please enter a transaction number.");
+            return;
+        }
+
+        Cursor cursor = database.rawQuery("SELECT * FROM BikeBookings WHERE TransactionNumber = ?", new String[]{transactionNumber});
+        if (cursor.moveToFirst()) {
+            int bookingID = cursor.getInt(0);
+            String customerName = cursor.getString(1);
+            double amountPaid = cursor.getDouble(2);
+            String bankName = cursor.getString(3);
+
+            resultTextView.setText("Booking ID: " + bookingID +
+                    "\nCustomer Name: " + customerName +
+                    "\nAmount Paid: ₹" + amountPaid +
+                    "\nBank: " + bankName);
+        } else {
+            resultTextView.setText("No booking found for Transaction No: " + transactionNumber);
+        }
+        cursor.close();
+    }
+
+    private void fetchTotalBikesBooked() {
+        Cursor cursor = database.rawQuery("SELECT COUNT(*) FROM BikeBookings", null);
+        if (cursor.moveToFirst()) {
+            int totalBikes = cursor.getInt(0);
+            resultTextView.setText("Total Bikes Booked: " + totalBikes);
+        }
+        cursor.close();
+    }
+}
+
+
+
+
+question 3->>>>>>>>>>
+Design an application to submit the attendance details by the faculty. Faculty can input their ID, course name, number of students attended and date of lecture. Faculty can choose the course name from the auto suggestion and date of lecture using date picker dialog. On click of “submit” button, store all the details in the DB. Help the HOD to fetch the following details from DB and display it in next activity named “Result Activity”.
+1. Display the attendance details on a particular date.
+2. Display the attendance details of a given course.
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Faculty ID Input -->
+    <EditText
+        android:id="@+id/facultyIdEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Faculty ID" />
+
+    <!-- Course Name AutoComplete TextView -->
+    <AutoCompleteTextView
+        android:id="@+id/courseNameAutoComplete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Course Name" />
+
+    <!-- Students Attended Input -->
+    <EditText
+        android:id="@+id/studentsAttendedEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Number of Students Attended"
+        android:inputType="number" />
+
+    <!-- Date Picker Button -->
+    <Button
+        android:id="@+id/pickDateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pick Date" />
+
+    <!-- Submit Button -->
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit Attendance" />
+
+    <!-- Fetch by Date Button -->
+    <Button
+        android:id="@+id/fetchByDateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fetch by Date" />
+
+    <!-- Fetch by Course Button -->
+    <Button
+        android:id="@+id/fetchByCourseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fetch by Course" />
+
+</LinearLayout>
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- TextView for displaying results -->
+    <TextView
+        android:id="@+id/resultTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Results will be displayed here"
+        android:textSize="16sp"
+        android:padding="8dp" />
+
+</LinearLayout>
+
+
+
+package com.example.attendanceapp;
+
+import android.app.DatePickerDialog;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import androidx.appcompat.app.AppCompatActivity;
+import java.util.Calendar;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText facultyIdEditText, studentsAttendedEditText;
+    private AutoCompleteTextView courseNameAutoComplete;
+    private Button pickDateButton, submitButton, fetchByDateButton, fetchByCourseButton;
+    private String selectedDate;
+    private SQLiteDatabase database;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Initialize SQLite Database
+        database = openOrCreateDatabase("AttendanceDB", MODE_PRIVATE, null);
+        database.execSQL("CREATE TABLE IF NOT EXISTS AttendanceDetails (" +
+                "ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "FacultyID TEXT, " +
+                "CourseName TEXT, " +
+                "StudentsAttended INTEGER, " +
+                "LectureDate TEXT)");
+
+        // Set up UI
+        setupUI();
+
+        // Set up AutoCompleteTextView with course suggestions
+        String[] courses = {"Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"};
+        ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, courses);
+        courseNameAutoComplete.setAdapter(courseAdapter);
+
+        // Button listeners
+        pickDateButton.setOnClickListener(v -> showDatePickerDialog());
+        submitButton.setOnClickListener(v -> saveAttendanceDetails());
+        fetchByDateButton.setOnClickListener(v -> fetchDetailsByDate());
+        fetchByCourseButton.setOnClickListener(v -> fetchDetailsByCourse());
+    }
+
+    private void setupUI() {
+        facultyIdEditText = new EditText(this);
+        studentsAttendedEditText = new EditText(this);
+        courseNameAutoComplete = new AutoCompleteTextView(this);
+
+        pickDateButton = new Button(this);
+        submitButton = new Button(this);
+        fetchByDateButton = new Button(this);
+        fetchByCourseButton = new Button(this);
+
+        // Add basic UI setup here
+    }
+
+    private void showDatePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year1, month1, dayOfMonth) -> {
+            selectedDate = year1 + "-" + (month1 + 1) + "-" + dayOfMonth;
+        }, year, month, day);
+        datePickerDialog.show();
+    }
+
+    private void saveAttendanceDetails() {
+        String facultyId = facultyIdEditText.getText().toString();
+        String courseName = courseNameAutoComplete.getText().toString();
+        String studentsAttended = studentsAttendedEditText.getText().toString();
+
+        if (facultyId.isEmpty() || courseName.isEmpty() || studentsAttended.isEmpty() || selectedDate == null) {
+            // Handle validation
+            return;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put("FacultyID", facultyId);
+        values.put("CourseName", courseName);
+        values.put("StudentsAttended", Integer.parseInt(studentsAttended));
+        values.put("LectureDate", selectedDate);
+
+        database.insert("AttendanceDetails", null, values);
+
+        // Clear inputs after saving
+        facultyIdEditText.setText("");
+        courseNameAutoComplete.setText("");
+        studentsAttendedEditText.setText("");
+    }
+
+    private void fetchDetailsByDate() {
+        Intent intent = new Intent(this, ResultActivity.class);
+        intent.putExtra("queryType", "byDate");
+        intent.putExtra("date", selectedDate);
+        startActivity(intent);
+    }
+
+    private void fetchDetailsByCourse() {
+        String courseName = courseNameAutoComplete.getText().toString();
+        Intent intent = new Intent(this, ResultActivity.class);
+        intent.putExtra("queryType", "byCourse");
+        intent.putExtra("courseName", courseName);
+        startActivity(intent);
+    }
+}
+
+
+
+package com.example.attendanceapp;
+
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class ResultActivity extends AppCompatActivity {
+
+    private TextView resultTextView;
+    private SQLiteDatabase database;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Initialize TextView for displaying results
+        resultTextView = new TextView(this);
+        setContentView(resultTextView);
+
+        // Initialize SQLite Database
+        database = openOrCreateDatabase("AttendanceDB", MODE_PRIVATE, null);
+
+        // Get intent data
+        Intent intent = getIntent();
+        String queryType = intent.getStringExtra("queryType");
+
+        if ("byDate".equals(queryType)) {
+            String date = intent.getStringExtra("date");
+            fetchAttendanceByDate(date);
+        } else if ("byCourse".equals(queryType)) {
+            String courseName = intent.getStringExtra("courseName");
+            fetchAttendanceByCourse(courseName);
+        }
+    }
+
+    private void fetchAttendanceByDate(String date) {
+        Cursor cursor = database.rawQuery("SELECT * FROM AttendanceDetails WHERE LectureDate = ?", new String[]{date});
+        StringBuilder result = new StringBuilder();
+
+        if (cursor.moveToFirst()) {
+            do {
+                String facultyId = cursor.getString(1);
+                String courseName = cursor.getString(2);
+                int studentsAttended = cursor.getInt(3);
+
+                result.append("Faculty ID: ").append(facultyId)
+                        .append("\nCourse: ").append(courseName)
+                        .append("\nStudents Attended: ").append(studentsAttended)
+                        .append("\nDate: ").append(date)
+                        .append("\n\n");
+            } while (cursor.moveToNext());
+        } else {
+            result.append("No attendance records found for the date: ").append(date);
+        }
+        cursor.close();
+
+        resultTextView.setText(result.toString());
+    }
+
+    private void fetchAttendanceByCourse(String courseName) {
+        Cursor cursor = database.rawQuery("SELECT * FROM AttendanceDetails WHERE CourseName = ?", new String[]{courseName});
+        StringBuilder result = new StringBuilder();
+
+        if (cursor.moveToFirst()) {
+            do {
+                String facultyId = cursor.getString(1);
+                int studentsAttended = cursor.getInt(3);
+                String lectureDate = cursor.getString(4);
+
+                result.append("Faculty ID: ").append(facultyId)
+                        .append("\nCourse: ").append(courseName)
+                        .append("\nStudents Attended: ").append(studentsAttended)
+                        .append("\nDate: ").append(lectureDate)
+                        .append("\n\n");
+            } while (cursor.moveToNext());
+        } else {
+            result.append("No attendance records found for the course: ").append(courseName);
+        }
+        cursor.close();
+
+        resultTextView.setText(result.toString());
+    }
+}
+
+
+
+
+xml code ->>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Faculty ID Input -->
+    <EditText
+        android:id="@+id/facultyIdEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Faculty ID" />
+
+    <!-- Course Name AutoComplete TextView -->
+    <AutoCompleteTextView
+        android:id="@+id/courseNameAutoComplete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Course Name" />
+
+    <!-- Students Attended Input -->
+    <EditText
+        android:id="@+id/studentsAttendedEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Number of Students Attended"
+        android:inputType="number" />
+
+    <!-- Date Picker Button -->
+    <Button
+        android:id="@+id/pickDateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pick Date" />
+
+    <!-- Submit Button -->
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit Attendance" />
+
+    <!-- Fetch by Date Button -->
+    <Button
+        android:id="@+id/fetchByDateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fetch by Date" />
+
+    <!-- Fetch by Course Button -->
+    <Button
+        android:id="@+id/fetchByCourseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fetch by Course" />
+
+</LinearLayout>
+
+
+
+
+xml code ->>>>>>>>
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- TextView for displaying results -->
+    <TextView
+        android:id="@+id/resultTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Results will be displayed here"
+        android:textSize="16sp"
+        android:padding="8dp" />
+
+</LinearLayout>
+
+
+
+
+
+
+question 4->>>>>>>>>>
+
+Presidency university admission department need an app for checking student's eligibility for admission, students should enter their Reg No. Name, Board and marks of Physics, Chemistry and Mathematics, if the average of marks is above 60 %, then set the message “you are eligible for admission” in a TextView placed at the bottom of the screen.
+
+solution ->>>>>>>>>
+
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Registration Number -->
+        <EditText
+            android:id="@+id/regNoEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Registration Number"
+            android:inputType="text" />
+
+        <!-- Name -->
+        <EditText
+            android:id="@+id/nameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Name"
+            android:inputType="textPersonName" />
+
+        <!-- Board Name -->
+        <EditText
+            android:id="@+id/boardEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Board Name"
+            android:inputType="text" />
+
+        <!-- Physics Marks -->
+        <EditText
+            android:id="@+id/physicsEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Physics Marks"
+            android:inputType="number" />
+
+        <!-- Chemistry Marks -->
+        <EditText
+            android:id="@+id/chemistryEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Chemistry Marks"
+            android:inputType="number" />
+
+        <!-- Math Marks -->
+        <EditText
+            android:id="@+id/mathEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Math Marks"
+            android:inputType="number" />
+
+        <!-- Button -->
+        <Button
+            android:id="@+id/checkButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Check Eligibility"
+            android:marginTop="16dp" />
+
+        <!-- Result Display -->
+        <TextView
+            android:id="@+id/resultTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Result will appear here"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:gravity="center" />
+
+    </LinearLayout>
+</ScrollView>
+
+
+
+
+
+
+java code 
+
+package com.example.admissioncheck;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText regNoEditText, nameEditText, boardEditText, physicsEditText, chemistryEditText, mathEditText;
+    private TextView resultTextView;
+    private Button checkButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Initialize views
+        regNoEditText = findViewById(R.id.regNoEditText);
+        nameEditText = findViewById(R.id.nameEditText);
+        boardEditText = findViewById(R.id.boardEditText);
+        physicsEditText = findViewById(R.id.physicsEditText);
+        chemistryEditText = findViewById(R.id.chemistryEditText);
+        mathEditText = findViewById(R.id.mathEditText);
+        resultTextView = findViewById(R.id.resultTextView);
+        checkButton = findViewById(R.id.checkButton);
+
+        // Set onClickListener for the button
+        checkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get input values
+                String regNo = regNoEditText.getText().toString();
+                String name = nameEditText.getText().toString();
+                String board = boardEditText.getText().toString();
+                String physics = physicsEditText.getText().toInt();
+                String chemistry = chemistryEditText.getText().toInt();
+                String math = mathEditText.getText().toInt();
+
+                // Validate inputs
+                if (physics.isEmpty() || chemistry.isEmpty() || math.isEmpty()) {
+                    resultTextView.setText("Please enter marks for all subjects.");
+                    return;
+                }
+
+                
+
+                double average = (physicsMarks + chemistryMarks + mathMarks) / 3.0;
+
+                // Check eligibility
+                if (average >= 60) {
+                    resultTextView.setText("You are eligible for admission.");
+                } else {
+                    resultTextView.setText("You are not eligible for admission.");
+                }
+            }
+        });
+    }
+}
+
+
+
+
+question 5->>>>>
+package com.example.railwaybooking;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText nameEditText, phoneEditText, emailEditText;
+    private RadioGroup destinationRadioGroup;
+    private RadioButton radioButton;
+    private Button submitButton;
+    private EditText dateEditText;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Initialize UI elements
+        nameEditText = findViewById(R.id.nameEditText);
+        phoneEditText = findViewById(R.id.phoneEditText);
+        emailEditText = findViewById(R.id.emailEditText);
+        destinationRadioGroup = findViewById(R.id.destinationRadioGroup);
+        submitButton = findViewById(R.id.submitButton);
+        dateEditText = findViewById(R.id.dateEditText);
+
+        // Set OnClickListener for submit button
+        submitButton.setOnClickListener(v -> submitDetails());
+    }
+
+    private void submitDetails() {
+        // Get inputs
+        String name = nameEditText.getText().toString();
+        String phone = phoneEditText.getText().toString();
+        String email = emailEditText.getText().toString();
+        int selectedId = destinationRadioGroup.getCheckedRadioButtonId();
+        radioButton = findViewById(selectedId);
+        String destination = radioButton.getText().toString();
+        int distance = Integer.parseInt(radioButton.getTag().toString());
+        String date = dateEditText.getText().toString();
+
+        // Check if any field is empty
+        if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || destination.isEmpty() || date.isEmpty()) {
+            return; // Handle validation for empty fields
+        }
+
+        // Pass data to the next screen
+        Intent intent = new Intent(MainActivity.this, TicketDetailsActivity.class);
+        intent.putExtra("name", name);
+        intent.putExtra("phone", phone);
+        intent.putExtra("email", email);
+        intent.putExtra("destination", destination);
+        intent.putExtra("distance", distance);
+        intent.putExtra("date", date);
+        startActivity(intent);
+    }
+}
+
+
+
+
+package com.example.railwaybooking;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class TicketDetailsActivity extends AppCompatActivity {
+
+    private TextView nameTextView, phoneTextView, emailTextView, destinationTextView, distanceTextView, costTextView;
+    private EditText ageEditText;
+    private RadioGroup classRadioGroup;
+    private Button calculateButton;
+    private int distance;
+    private String name, phone, email, destination, date;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_ticket_details);
+
+        // Initialize UI elements
+        nameTextView = findViewById(R.id.nameTextView);
+        phoneTextView = findViewById(R.id.phoneTextView);
+        emailTextView = findViewById(R.id.emailTextView);
+        destinationTextView = findViewById(R.id.destinationTextView);
+        distanceTextView = findViewById(R.id.distanceTextView);
+        costTextView = findViewById(R.id.costTextView);
+        ageEditText = findViewById(R.id.ageEditText);
+        classRadioGroup = findViewById(R.id.classRadioGroup);
+        calculateButton = findViewById(R.id.calculateButton);
+
+        // Get passed data from MainActivity
+        name = getIntent().getStringExtra("name");
+        phone = getIntent().getStringExtra("phone");
+        email = getIntent().getStringExtra("email");
+        destination = getIntent().getStringExtra("destination");
+        distance = getIntent().getIntExtra("distance", 0);
+        date = getIntent().getStringExtra("date");
+
+        // Set TextView fields
+        nameTextView.setText("Name: " + name);
+        phoneTextView.setText("Phone: " + phone);
+        emailTextView.setText("Email: " + email);
+        destinationTextView.setText("Destination: " + destination);
+        distanceTextView.setText("Distance: " + distance + " km");
+
+        // Set OnClickListener for calculate button
+        calculateButton.setOnClickListener(v -> calculateTicketCost());
+    }
+
+    private void calculateTicketCost() {
+        // Get class selection
+        int selectedClassId = classRadioGroup.getCheckedRadioButtonId();
+        RadioButton selectedClassRadioButton = findViewById(selectedClassId);
+        String selectedClass = selectedClassRadioButton.getText().toString();
+        int ticketCostPerKm = 0;
+
+        // Set ticket cost per km based on class
+        if (selectedClass.equals("General")) {
+            ticketCostPerKm = 1.5;
+        } else if (selectedClass.equals("Sleeper")) {
+            ticketCostPerKm = 3;
+        } else if (selectedClass.equals("AC")) {
+            ticketCostPerKm = 6;
+        }
+
+        // Calculate ticket cost
+        int age = Integer.parseInt(ageEditText.getText().toString());
+        double ticketCost = distance * ticketCostPerKm;
+
+        // Apply discount for travelers 60 or above
+        if (age >= 60) {
+            ticketCost /= 2;
+        }
+
+        // Display ticket cost
+        costTextView.setText("Ticket Cost: ₹" + ticketCost);
+    }
+}
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/nameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name" />
+
+    <EditText
+        android:id="@+id/phoneEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone Number" />
+
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email ID" />
+
+    <RadioGroup
+        android:id="@+id/destinationRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/destinationBangalore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bangalore"
+            android:tag="1000" />
+
+        <RadioButton
+            android:id="@+id/destinationMumbai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mumbai"
+            android:tag="1500" />
+
+        <RadioButton
+            android:id="@+id/destinationDelhi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delhi"
+            android:tag="2500" />
+
+        <!-- Add more destinations as required -->
+
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/dateEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Date of Journey" />
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit" />
+
+</LinearLayout>
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name: " />
+
+    <TextView
+        android:id="@+id/phoneTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Phone: " />
+
+    <TextView
+        android:id="@+id/emailTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email: " />
+
+    <TextView
+        android:id="@+id/destinationTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Destination: " />
+
+    <TextView
+        android:id="@+id/distanceTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Distance: " />
+
+    <EditText
+        android:id="@+id/ageEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Age of Traveler" />
+
+    <RadioGroup
+        android:id="@+id/classRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/classGeneral"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="General" />
+
+        <RadioButton
+            android:id="@+id/classSleeper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sleeper" />
+
+        <RadioButton
+            android:id="@+id/classAC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AC" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/calculateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calculate Cost" />
+
+    <TextView
+        android:id="@+id/costTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ticket Cost: ₹0" />
+
+</LinearLayout>
+
+question 6->>>>>>>>>>>>>>
+
+Design an app to book movies that are going to release in this winter holidays. Read the name, mobile number from the user & choose the movie of your interest and the tentative plan to
+watch the movie. [Use Date Picker Dialog]. Set all the details in a TextView placed at the bottom of the screen.
+
+package com.example.moviebookingapp;
+
+import android.app.DatePickerDialog;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Calendar;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText nameEditText, mobileEditText;
+    private Spinner movieSpinner;
+    private Button selectDateButton, bookMovieButton;
+    private TextView detailsTextView;
+
+    private int selectedYear, selectedMonth, selectedDay;
+    private String selectedDate;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Initialize UI elements
+        nameEditText = findViewById(R.id.nameEditText);
+        mobileEditText = findViewById(R.id.mobileEditText);
+        movieSpinner = findViewById(R.id.movieSpinner);
+        selectDateButton = findViewById(R.id.selectDateButton);
+        bookMovieButton = findViewById(R.id.bookMovieButton);
+        detailsTextView = findViewById(R.id.detailsTextView);
+
+        // Set up Date Picker Dialog
+        selectDateButton.setOnClickListener(v -> showDatePickerDialog());
+
+        // Set up Book Movie button
+        bookMovieButton.setOnClickListener(v -> bookMovie());
+    }
+
+    private void showDatePickerDialog() {
+        // Get the current date
+        Calendar calendar = Calendar.getInstance();
+        selectedYear = calendar.get(Calendar.YEAR);
+        selectedMonth = calendar.get(Calendar.MONTH);
+        selectedDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Show Date Picker Dialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                MainActivity.this,
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    selectedYear = year;
+                    selectedMonth = monthOfYear;
+                    selectedDay = dayOfMonth;
+
+                    // Set the selected date to the button text
+                    selectedDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                    selectDateButton.setText("Selected Date: " + selectedDate);
+                },
+                selectedYear, selectedMonth, selectedDay
+        );
+        datePickerDialog.show();
+    }
+
+    private void bookMovie() {
+        // Get the user input details
+        String name = nameEditText.getText().toString();
+        String mobile = mobileEditText.getText().toString();
+        String movie = movieSpinner.getSelectedItem().toString();
+
+        // Check if all fields are filled
+        if (name.isEmpty() || mobile.isEmpty() || selectedDate == null) {
+            Toast.makeText(this, "Please fill all fields and select a date", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Display the booking details in TextView
+        String bookingDetails = "Name: " + name + "\nMobile: " + mobile + "\nMovie: " + movie +
+                "\nDate: " + selectedDate;
+
+        detailsTextView.setText(bookingDetails);
+    }
+}
+
+
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- User Name EditText -->
+    <EditText
+        android:id="@+id/nameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your name"
+        android:inputType="text" />
+
+    <!-- Mobile Number EditText -->
+    <EditText
+        android:id="@+id/mobileEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your mobile number"
+        android:inputType="phone" />
+
+    <!-- Movie Spinner (Dropdown) -->
+    <Spinner
+        android:id="@+id/movieSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- Date Selection Button -->
+    <Button
+        android:id="@+id/selectDateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Movie Date"
+        android:layout_marginTop="16dp" />
+
+    <!-- Book Movie Button -->
+    <Button
+        android:id="@+id/bookMovieButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Book Movie"
+        android:layout_marginTop="16dp" />
+
+    <!-- TextView to Display Booking Details -->
+    <TextView
+        android:id="@+id/detailsTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Booking Details will be shown here"
+        android:textSize="16sp" />
+
+</LinearLayout>
+
+
+
+
+
+<resources>
+    <string name="app_name">MovieBookingApp</string>
+    <string-array name="movie_list">
+        <item>Avatar 2</item>
+        <item>Black Panther: Wakanda Forever</item>
+        <item>Spider-Man: No Way Home</item>
+        <item>The Matrix Resurrections</item>
+        <item>Fantastic Beasts: The Secrets of Dumbledore</item>
+    </string-array>
+</resources>
+
+
+
+
+// In MainActivity.java, inside onCreate() method
+ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        R.array.movie_list, android.R.layout.simple_spinner_item);
+adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+movieSpinner.setAdapter(adapter);
+
+
+
+
+
+
+
+
+
+
+question 7 ->>>>
+Create an android app to for checking the end term eligibility. Save the Test1 & Test2 marks of the Student using shared preferences. In the next activity, Print the marks of Test1 and Test2 and also print whether the student is eligible for the end term or not?
+
+package com.example.endtermeligibility;
+
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText test1EditText, test2EditText;
+    private Button saveButton;
+    private SharedPreferences sharedPreferences;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Initialize UI elements
+        test1EditText = findViewById(R.id.test1EditText);
+        test2EditText = findViewById(R.id.test2EditText);
+        saveButton = findViewById(R.id.saveButton);
+
+        // Get SharedPreferences
+        sharedPreferences = getSharedPreferences("StudentMarks", MODE_PRIVATE);
+
+        // Set OnClickListener for save button
+        saveButton.setOnClickListener(v -> saveMarks());
+    }
+
+    private void saveMarks() {
+        String test1 = test1EditText.getText().toString();
+        String test2 = test2EditText.getText().toString();
+
+        // Check if the inputs are not empty
+        if (test1.isEmpty() || test2.isEmpty()) {
+            Toast.makeText(this, "Please enter both Test1 and Test2 marks.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Save the marks in SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("test1", Integer.parseInt(test1));
+        editor.putInt("test2", Integer.parseInt(test2));
+        editor.apply();
+
+        Toast.makeText(this, "Marks saved successfully!", Toast.LENGTH_SHORT).show();
+    }
+}
+
+
+
+
+
+
+
+package com.example.endtermeligibility;
+
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class EligibilityActivity extends AppCompatActivity {
+
+    private TextView test1TextView, test2TextView, eligibilityTextView;
+    private SharedPreferences sharedPreferences;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_eligibility);
+
+        // Initialize UI elements
+        test1TextView = findViewById(R.id.test1TextView);
+        test2TextView = findViewById(R.id.test2TextView);
+        eligibilityTextView = findViewById(R.id.eligibilityTextView);
+
+        // Get SharedPreferences
+        sharedPreferences = getSharedPreferences("StudentMarks", MODE_PRIVATE);
+
+        // Retrieve the saved marks
+        int test1 = sharedPreferences.getInt("test1", -1);
+        int test2 = sharedPreferences.getInt("test2", -1);
+
+        // Display marks
+        if (test1 != -1 && test2 != -1) {
+            test1TextView.setText("Test 1 Marks: " + test1);
+            test2TextView.setText("Test 2 Marks: " + test2);
+
+            // Check eligibility (e.g., eligibility is passing if Test1 and Test2 marks are >= 35)
+            if (test1 >= 35 && test2 >= 35) {
+                eligibilityTextView.setText("Eligible for End Term");
+            } else {
+                eligibilityTextView.setText("Not Eligible for End Term");
+            }
+        } else {
+            test1TextView.setText("No marks found.");
+            test2TextView.setText("No marks found.");
+            eligibilityTextView.setText("No eligibility status found.");
+        }
+    }
+}
+
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/test1EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Test1 Marks"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/test2EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Test2 Marks"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Marks" />
+
+</LinearLayout>
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/test1TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Test 1 Marks: " />
+
+    <TextView
+        android:id="@+id/test2TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Test 2 Marks: " />
+
+    <TextView
+        android:id="@+id/eligibilityTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Eligibility Status: " />
+
+</LinearLayout>
+	
